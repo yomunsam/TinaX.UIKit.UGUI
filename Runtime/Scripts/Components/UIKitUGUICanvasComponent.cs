@@ -33,6 +33,19 @@ namespace TinaX.UIKit.UGUI.Components
         }
 
         #endregion
+
+        [ContextMenu("Print UI Tree")]
+        public void PrintUITree()
+        {
+#if UNITY_EDITOR
+            if(!Application.isPlaying)
+            {
+                Debug.LogWarning("Valid only when playing");
+                return;
+            }
+#endif
+            this.Canvas?.RootGroup.PrintUITree();
+        }
     }
 
 #nullable restore

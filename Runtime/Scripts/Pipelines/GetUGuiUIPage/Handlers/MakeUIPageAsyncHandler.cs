@@ -19,7 +19,7 @@ namespace TinaX.UIKit.UGUI.Pipelines.GetUGuiUIPage.Handlers
                 throw new XException("PageController must be \"UGUIPageController\"");
             }
             var ugui_controller = payload.Options.PageController as UGUIPageController;
-            payload.UIPage = new Page.UGUIPage(payload.ViewProvider!, ugui_controller);
+            payload.UIPage = new Page.UGUIPage(payload.Options.PageUri, payload.ViewProvider!, ugui_controller);
             return UniTask.CompletedTask;
         }
     }

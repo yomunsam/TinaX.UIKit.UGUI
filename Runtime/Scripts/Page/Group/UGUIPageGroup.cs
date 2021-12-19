@@ -35,6 +35,9 @@ namespace TinaX.UIKit.UGUI.Page.Group
             {
                 page.OnJoinGroup(this);
             }
+
+            //重新排序
+            ResetOrder();
         }
     }
 }

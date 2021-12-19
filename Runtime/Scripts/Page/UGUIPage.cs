@@ -25,12 +25,13 @@ namespace TinaX.UIKit.UGUI.Page
         protected IWrapperReflectionProvider? m_XBehaviourWrapperReflectionProvider { get; set; }
 
 
-        public UGUIPage(IPageViewProvider<UGUIPageView, UGUIPage> viewProvider) : base(viewProvider)
+        public UGUIPage(string pageUri, IPageViewProvider<UGUIPageView, UGUIPage> viewProvider) : base(pageUri, viewProvider)
         {
             this.m_uGuiViewProvider = viewProvider;
         }
 
-        public UGUIPage(IPageViewProvider<UGUIPageView, UGUIPage> viewProvider, UGUIPageController? controller, IWrapperReflectionProvider? xBehaviourWrapperReflectionProvider = null) : base(viewProvider, controller)
+        public UGUIPage(string pageUri, IPageViewProvider<UGUIPageView, UGUIPage> viewProvider, UGUIPageController? controller, IWrapperReflectionProvider? xBehaviourWrapperReflectionProvider = null)
+            : base(pageUri, viewProvider, controller)
         {
             this.m_uGuiViewProvider = viewProvider;
             this.m_UGuiPageController = controller;

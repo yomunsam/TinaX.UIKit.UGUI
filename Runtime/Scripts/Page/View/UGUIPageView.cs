@@ -19,7 +19,7 @@ namespace TinaX.UIKit.UGUI.Page.View
         }
 
         protected GameObject? m_uGuiGameObject;
-
+        protected UnityEngine.Canvas? m_UnityCanvas;
 
 
         public override void Display()
@@ -29,10 +29,17 @@ namespace TinaX.UIKit.UGUI.Page.View
                 m_uGuiGameObject = GameObject.Instantiate(m_uGuiPrefab, m_uGuiPage.Transform);
                 if (m_uGuiGameObject.name.Length > 7)
                     m_uGuiGameObject.name = m_uGuiGameObject.name.Substring(0, m_uGuiGameObject.name.Length - 7);
+
+                //Sort Order
+                m_UnityCanvas = m_uGuiGameObject.GetComponentOrAdd<UnityEngine.Canvas>();
+                m_UnityCanvas.overrideSorting = true;
             }
 
-            if(m_uGuiPage.Controller != null)
+            
+
+            if (m_uGuiPage.Controller != null)
             {
+
                 //导航器
 
                 //挂载XComponent
@@ -42,6 +49,16 @@ namespace TinaX.UIKit.UGUI.Page.View
             }
         }
 
+        /// <summary>
+        /// 设置序号
+        /// </summary>
+        /// <param name="order"></param>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public override void SetOrder(int order)
+        {
+            if (m_UnityCanvas != null)
+                m_UnityCanvas.sortingOrder = order;
+        }
     }
 #nullable restore
 }

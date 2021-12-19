@@ -1,0 +1,20 @@
+{
+    "name": "TinaX.UIKit.UGUI.Editor",
+    "rootNamespace": "TinaXEditor.UIKit.UGUI",
+    "references": [
+        "GUID:4e58fd8b44ff4c14f917ce28647bad94",
+        "GUID:eb0b36a1eab17c54a93dfa5bf816d363",
+        "GUID:2b2b84db2356fe84d9158fa418cdac5e"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

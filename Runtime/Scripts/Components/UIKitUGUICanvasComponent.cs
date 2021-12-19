@@ -2,9 +2,12 @@
 using TinaX.UIKit.Canvas;
 using UnityEngine;
 using TinaX;
+using TinaX.UIKit.UGUI.Canvas;
+using TinaX.UIKit.UGUI.Page.Group;
 
-namespace TinaX.UIKit.UGUI.Canvas
+namespace TinaX.UIKit.UGUI.Components
 {
+#nullable enable
     [AddComponentMenu("TinaX/UIKit/UGUI/UIKit uGUI Canvas")]
     public class UIKitUGUICanvasComponent : MonoBehaviour
     {
@@ -15,18 +18,22 @@ namespace TinaX.UIKit.UGUI.Canvas
 
         public UIKitUGUICanvasComponent()
         {
-            Canvas = new UIKitCanvas();
+            
         }
-        public UIKitCanvas Canvas { get; }
+
+        public UIKitUGUICanvas? Canvas { get; private set; }
 
 
         #region Unity Magic Methods
         void Awake()
         {
+            Canvas = new UIKitUGUICanvas(new UGUIPageGroup(this.transform, this.name), this.name);
             if (DontDestroy)
                 this.gameObject.DontDestroyOnLoad();
         }
 
         #endregion
     }
+
+#nullable restore
 }

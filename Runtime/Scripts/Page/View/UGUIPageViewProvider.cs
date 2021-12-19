@@ -15,9 +15,9 @@ namespace TinaX.UIKit.UGUI.Page.View
         private readonly string m_ViewUri;
         private readonly IAssetService m_AssetService;
 
-        public UGUIPageViewProvider(string viewUri, IAssetService assetService)
+        public UGUIPageViewProvider(string viewLoadPath, IAssetService assetService)
         {
-            this.m_ViewUri = viewUri;
+            this.m_ViewUri = viewLoadPath;
             this.m_AssetService = assetService;
         }
 

@@ -1,25 +1,36 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using TinaX.Options;
 using TinaX.Services;
+using TinaX.Systems.Pipeline;
 using TinaX.UIKit.UGUI.Consts;
+using TinaX.UIKit.UGUI.Options;
 using TinaX.UIKit.UGUI.Page;
 using TinaX.UIKit.UGUI.Page.View;
+using TinaX.UIKit.UGUI.Pipelines.GetUGuiUIPage;
 using UnityEngine;
 
 namespace TinaX.UIKit.UGUI.Services
 {
     public class UIKitUGUIService : IUIKitUGUI, IUIKitUGUIInternalService
     {
-        private readonly string _uiKit_UGUI_Scheme;
-        private readonly int _uiKit_UGUI_Scheme_Length;
+        
         private readonly IAssetService m_AssetService;
+        private readonly IXCore m_Core;
+        private readonly UIKitUGUIOptions m_Options;
 
-        public UIKitUGUIService(IAssetService assetService)
+        private readonly XPipeline<IGetUGuiPageAsyncHandler> m_GetUGUIPageAsyncPipeline;
+
+        public UIKitUGUIService(IAssetService assetService,
+            IOptions<UIKitUGUIOptions> options,
+            IXCore core )
         {
-            _uiKit_UGUI_Scheme = $"{UIKitUGUIConsts.SchemeName.ToLower()}://";
-            _uiKit_UGUI_Scheme_Length = _uiKit_UGUI_Scheme.Length;
             this.m_AssetService = assetService;
+            this.m_Core = core;
+            m_Options = options.Value;
+
+            m_GetUGUIPageAsyncPipeline = m_Options.GetUGUIPageAsyncPipeline;
         }
 
         public async UniTask StartAsync(CancellationToken cancellationToken = default)
@@ -31,19 +42,25 @@ namespace TinaX.UIKit.UGUI.Services
         }
 
 
-        public async UniTask<UGUIPage> GetUIPageAsync(string pageUri, bool loadViewPrefab = true, CancellationToken cancellationToken = default)
+        public UniTask<UGUIPage> GetUIPageAsync(string pageUri, bool loadViewPrefab = true, CancellationToken cancellationToken = default)
         {
-            //Todo: 这里是超简化写法，先把UIKit的大框架打起来再重写UGUI这边
-            var viewLoadPath = pageUri.ToLower().StartsWith(_uiKit_UGUI_Scheme) ? pageUri.Substring(_uiKit_UGUI_Scheme_Length, pageUri.Length - _uiKit_UGUI_Scheme_Length) : pageUri;
-            if (!viewLoadPath.ToLower().EndsWith(".prefab"))
-                viewLoadPath += ".prefab";
+            var options = new GetUGUIPageOptions(pageUri);
+            return this.GetUIPageAsync(options, cancellationToken);
+        }
 
-            var viewProvider = new UGUIPageViewProvider(viewLoadPath, m_AssetService);
-            var page = new UGUIPage(viewProvider);
+        public async UniTask<UGUIPage> GetUIPageAsync(GetUGUIPageOptions options, CancellationToken cancellationToken = default)
+        {
+            //走Pipeline
+            var context = new GetUGuiPageContext(m_Core.Services, m_AssetService);
+            var payload = new GetUGuiPagePayload(options);
 
-            if (loadViewPrefab)
-                await page.ReadyViewAsync();
-            return page;
+            await m_GetUGUIPageAsyncPipeline.StartAsync(async handler =>
+            {
+                await handler.GetPageAsync(context, payload, cancellationToken);
+                return !context.BreakPipeline; //返回true则继续队列往下
+            });
+
+            return payload.UIPage;
         }
 
     }

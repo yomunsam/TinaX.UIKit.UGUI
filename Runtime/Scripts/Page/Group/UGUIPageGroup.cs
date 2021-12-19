@@ -1,4 +1,5 @@
-﻿using TinaX.UIKit.Page;
+﻿using System;
+using TinaX.UIKit.Page;
 using TinaX.UIKit.Page.Group;
 using UnityEngine;
 
@@ -22,6 +23,8 @@ namespace TinaX.UIKit.UGUI.Page.Group
 
         public override void Push(UIPageBase page)
         {
+            if (page == null)
+                throw new ArgumentNullException(nameof(page));
             m_Children.Add(page);
             if(page is UGUIPage)
             {

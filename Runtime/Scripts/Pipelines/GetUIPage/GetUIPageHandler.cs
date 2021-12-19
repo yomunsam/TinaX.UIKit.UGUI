@@ -2,11 +2,13 @@
 using Cysharp.Threading.Tasks;
 using TinaX.UIKit.Pipelines.GetUIPage;
 using TinaX.UIKit.UGUI.Consts;
+using TinaX.UIKit.UGUI.Options;
 using TinaX.UIKit.UGUI.Services;
 using UnityEngine;
 
 namespace TinaX.UIKit.UGUI.Pipelines.GetUIPage
 {
+#nullable enable
     public class GetUIPageHandler : IGetUIPageAsyncHandler
     {
         private readonly string _uiKit_UGUI_Scheme;
@@ -19,19 +21,30 @@ namespace TinaX.UIKit.UGUI.Pipelines.GetUIPage
 
         public string HandlerName => UIKitUGUIConsts.GetUIPagePipelineHandlerName;
 
-        private IUIKitUGUI m_UIKit_UGUI_Service;
+        private IUIKitUGUI? m_UIKit_UGUI_Service;
 
-        public async UniTask GetPageAsync(string pageUri, GetUIPageContext context, CancellationToken cancellationToken)
+        
+
+        public async UniTask GetPageAsync(GetUIPageContext context, GetUIPagePayload payload, CancellationToken cancellationToken)
         {
-            Debug.Log("有走到这里");
+#if TINAX_DEV
+            Debug.Log("UIKit uGUI - Get Page: " + payload.PageUri);
+#endif
             if (m_UIKit_UGUI_Service == null)
                 m_UIKit_UGUI_Service = context.Services.Get<IUIKitUGUI>();
 
-            if(!pageUri.ToLower().StartsWith(_uiKit_UGUI_Scheme))
+            if (!payload.PageUriLower.StartsWith(_uiKit_UGUI_Scheme))
                 return;
+            var getUIOptions = new GetUGUIPageOptions(payload.PageUri)
+            {
+                PageController = payload.PageController
+            };
+            var page = await m_UIKit_UGUI_Service.GetUIPageAsync(getUIOptions);
+            payload.UIPage = page;
 
-            var page = await m_UIKit_UGUI_Service.GetUIPageAsync(pageUri, true, cancellationToken);
-            context.UIPageReuslt = page;
+            //加载完成，终止管线
+            context.Break();
         }
     }
+#nullable restore
 }

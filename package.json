@@ -1,0 +1,25 @@
+{
+  "name": "io.nekonya.tinax.uikit.ugui",
+  "version": "7.0.0-preview",
+  "displayName": "TinaX.UIKit.UGUI",
+  "description": "UGUI UI framework",
+  "unity": "2020.3",
+  "keywords": [
+    "TinaX",
+    "TinaX Framework",
+    "UI",
+    "UIKit",
+    "uGUI"
+  ],
+  "author": {
+    "name": "yomunsam",
+    "email": "yomunsam@nekonya.io",
+    "url": "https://yomunchan.moe"
+  },
+  "type": "library",
+  "license":"MIT",
+  "dependencies": {
+    "io.nekonya.tinax.uikit":"7.0.0-preview",
+    "io.nekonya.tinax.xcomponent":"7.0.0-preview"
+  }
+}

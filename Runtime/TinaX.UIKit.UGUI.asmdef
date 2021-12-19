@@ -1,0 +1,18 @@
+{
+    "name": "TinaX.UIKit.UGUI",
+    "rootNamespace": "TinaX.UIKit.UGUI",
+    "references": [
+        "GUID:4e58fd8b44ff4c14f917ce28647bad94",
+        "GUID:2b2b84db2356fe84d9158fa418cdac5e",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -39,5 +39,21 @@ namespace TinaX.UIKit.UGUI.Page.Group
             //重新排序
             ResetOrder();
         }
+
+        public virtual UGUIPageGroup GetLastChildUGUIGroup()
+        {
+            if (m_Children.Count > 0)
+            {
+                for (var i = m_Children.Count - 1; i >= 0; i--)
+                {
+                    var child = m_Children[i];
+                    if (child is UGUIPageGroup group)
+                    {
+                        return group.GetLastChildUGUIGroup();
+                    }
+                }
+            }
+            return this;
+        }
     }
 }

@@ -9,5 +9,11 @@ namespace TinaX.UIKit.UGUI.Services
     {
         UniTask<UGUIPage> GetUIPageAsync(string pageUri, bool loadViewPrefab = true, CancellationToken cancellationToken = default);
         UniTask<UGUIPage> GetUIPageAsync(GetUGUIPageOptions options, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// 把UI压到UGUI屏幕空间 的默认简化方法
+        /// </summary>
+        /// <param name="page"></param>
+        void PushScreenUI(UGUIPage page);
     }
 }

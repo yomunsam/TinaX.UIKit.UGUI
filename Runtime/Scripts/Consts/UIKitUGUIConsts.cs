@@ -3,6 +3,7 @@ namespace TinaX.UIKit.UGUI.Consts
     public static class UIKitUGUIConsts
     {
         public const string ProviderName = @"TinaX.UIKit.UGUI";
+        public const string DefaultConfigAssetName = "UIKitUGUI";
 
         public const string GetUIPagePipelineHandlerName = @"TinaX.UIKit.UGUI.GetUIPage";
 

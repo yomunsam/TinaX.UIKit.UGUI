@@ -8,7 +8,7 @@ using TinaX.UIKit.UGUI.Page.Group;
 namespace TinaX.UIKit.UGUI.Components
 {
 #nullable enable
-    [AddComponentMenu("TinaX/UIKit/UGUI/UIKit uGUI Canvas")]
+    [AddComponentMenu("TinaX/UIKit uGUI/UIKit uGUI Canvas")]
     public class UIKitUGUICanvasComponent : MonoBehaviour
     {
         #region Unity Serializable Fields
@@ -34,18 +34,7 @@ namespace TinaX.UIKit.UGUI.Components
 
         #endregion
 
-        [ContextMenu("Print UI Tree")]
-        public void PrintUITree()
-        {
-#if UNITY_EDITOR
-            if(!Application.isPlaying)
-            {
-                Debug.LogWarning("Valid only when playing");
-                return;
-            }
-#endif
-            this.Canvas?.RootGroup.PrintUITree();
-        }
+        
     }
 
 #nullable restore

@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.IO;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using TinaX.UIKit.Page;
 using TinaX.UIKit.Page.Group;
@@ -20,9 +21,15 @@ namespace TinaX.UIKit.UGUI.Page
 
         protected UGUIPageController? m_UGuiPageController { get; set; }
 
+        protected UGUIPageGroup? m_ParentUGUI { get; set; }
+
+        /// <summary>
+        /// 这里应该是指View （也就是UI Prefab实例化之后的GameObject）的Transform
+        /// </summary>
         protected Transform? m_Transform { get; set; }
 
         protected IWrapperReflectionProvider? m_XBehaviourWrapperReflectionProvider { get; set; }
+
 
 
         public UGUIPage(string pageUri, IPageViewProvider<UGUIPageView, UGUIPage> viewProvider) : base(pageUri, viewProvider)
@@ -44,6 +51,7 @@ namespace TinaX.UIKit.UGUI.Page
 
         public IWrapperReflectionProvider? XBehaviourWrapperReflectionProvider => m_XBehaviourWrapperReflectionProvider;
 
+        public UGUIPageGroup? ParentUGUI => m_ParentUGUI;
 
         public override async UniTask ReadyViewAsync(CancellationToken cancellationToken = default)
         {
@@ -64,21 +72,23 @@ namespace TinaX.UIKit.UGUI.Page
             throw new System.NotImplementedException();
         }
 
-        public override void OnJoinGroup(UIPageGroup group)
-        {
-            throw new System.NotImplementedException();
-        }
+        
 
         public virtual void OnJoinUGUIGroup(UGUIPageGroup group)
         {
-            m_Transform = group.RootTransform;
+            this.m_Parent = group;
+            this.m_ParentUGUI = group;
             this.DisplayView();
         }
 
-        public override void OnLeaveGroup(UIPageGroup group)
-        {
-            throw new System.NotImplementedException();
-        }
+        
+
+
+        public void SetName(string name) 
+            => m_Name = name;
+
+        public void SetTransform(Transform transform) 
+            => m_Transform = transform;
     }
 
 

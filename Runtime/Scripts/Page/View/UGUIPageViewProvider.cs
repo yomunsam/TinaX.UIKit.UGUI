@@ -21,6 +21,8 @@ namespace TinaX.UIKit.UGUI.Page.View
             this.m_AssetService = assetService;
         }
 
+        public string ViewUri => m_ViewUri;
+
         public bool SupportAsynchronous => true; //支持异步方法
 
         public PageView GetPageView(UIPageBase page)

@@ -26,8 +26,8 @@ namespace TinaX.UIKit.UGUI.Pipelines.GetUGuiUIPage.Handlers
         {
             //Todo: UIName Mapper, 根据UIName简写Page Uri的功能
             string loadPath = payload.PageUriLower.StartsWith(_uiKit_UGUI_Scheme) 
-                ? payload.Options.PageUri.Substring(_uiKit_UGUI_Scheme_Length, payload.Options.PageUri.Length - _uiKit_UGUI_Scheme_Length) 
-                : payload.Options.PageUri;
+                ? payload.Args.PageUri.Substring(_uiKit_UGUI_Scheme_Length, payload.Args.PageUri.Length - _uiKit_UGUI_Scheme_Length) 
+                : payload.Args.PageUri;
             payload.ViewAssetLoadPath = payload.PageUriLower.EndsWith(".prefab") ? loadPath : loadPath + ".prefab";
             return UniTask.CompletedTask;
         }

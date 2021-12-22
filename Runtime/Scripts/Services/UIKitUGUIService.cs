@@ -27,6 +27,7 @@ namespace TinaX.UIKit.UGUI.Services
         private readonly IAssetService m_AssetService;
         private readonly IConfigAssetService m_ConfigAssetService;
         private readonly IXCore m_Core;
+        private readonly IUIKit m_UIKit;
         private readonly UIKitUGUIOptions m_Options;
 
         private readonly XPipeline<IGetUGuiPageAsyncHandler> m_GetUGUIPageAsyncPipeline;
@@ -34,11 +35,13 @@ namespace TinaX.UIKit.UGUI.Services
         public UIKitUGUIService(IAssetService assetService,
             IConfigAssetService configAssetService,
             IOptions<UIKitUGUIOptions> options,
-            IXCore core)
+            IXCore core,
+            IUIKit uikit)
         {
             this.m_AssetService = assetService;
             this.m_ConfigAssetService = configAssetService;
             this.m_Core = core;
+            this.m_UIKit = uikit;
             m_Options = options.Value;
 
             m_GetUGUIPageAsyncPipeline = m_Options.GetUGUIPageAsyncPipeline;
@@ -132,15 +135,15 @@ namespace TinaX.UIKit.UGUI.Services
 
         public UniTask<UGUIPage> GetUIPageAsync(string pageUri, bool loadViewPrefab = true, CancellationToken cancellationToken = default)
         {
-            var options = new GetUGUIPageOptions(pageUri);
+            var options = new GetUGUIPageArgs(pageUri);
             return this.GetUIPageAsync(options, cancellationToken);
         }
 
-        public async UniTask<UGUIPage> GetUIPageAsync(GetUGUIPageOptions options, CancellationToken cancellationToken = default)
+        public async UniTask<UGUIPage> GetUIPageAsync(GetUGUIPageArgs args, CancellationToken cancellationToken = default)
         {
             //走Pipeline
-            var context = new GetUGuiPageContext(m_Core.Services, m_AssetService);
-            var payload = new GetUGuiPagePayload(options);
+            var context = new GetUGuiPageContext(m_Core.Services, m_AssetService, m_UIKit, this);
+            var payload = new GetUGuiPagePayload(args);
 
             await m_GetUGUIPageAsyncPipeline.StartAsync(async handler =>
             {
@@ -155,15 +158,16 @@ namespace TinaX.UIKit.UGUI.Services
         /// 把UI压到UGUI屏幕空间
         /// </summary>
         /// <param name="page"></param>
+        /// <param name="displayMessageArgs">传递给UI的启动参数</param>
         /// <returns></returns>
         /// <exception cref="XException"></exception>
-        public void PushScreenUI(UGUIPage page)
+        public void PushScreenUI(UGUIPage page, object[]? displayMessageArgs = null)
         {
             if (!m_Initialized)
                 throw new XException($"{UIKitUGUIConsts.ProviderName} not ready.");
             //获取Canvas
             var uiKitCanvas = m_UIRootManager!.GetUIKitCanvasOrCreate(); //Todo:SortingLayer分层
-            uiKitCanvas.RootGroupUGUI.GetLastChildUGUIGroup().Push(page);
+            uiKitCanvas.RootGroupUGUI.GetLastChildUGUIGroup().Push(page, displayMessageArgs);
         }
 
 

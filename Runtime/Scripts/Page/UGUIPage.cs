@@ -6,6 +6,7 @@ using TinaX.UIKit.Page.Group;
 using TinaX.UIKit.Page.View;
 using TinaX.UIKit.UGUI.Page.Group;
 using TinaX.UIKit.UGUI.Page.View;
+using TinaX.UIKit.UGUI.Services;
 using TinaX.XComponent.Warpper.ReflectionProvider;
 using UnityEngine;
 
@@ -15,6 +16,7 @@ namespace TinaX.UIKit.UGUI.Page
 
     public class UGUIPage : UIPageBase
     {
+
         protected IPageViewProvider<UGUIPageView, UGUIPage> m_uGuiViewProvider { get; set; }
 
         protected UGUIPageView? m_uGuiPageView { get; set; }
@@ -62,9 +64,9 @@ namespace TinaX.UIKit.UGUI.Page
             }
         }
 
-        public override void DisplayView()
+        public override void DisplayView(object[]? args)
         {
-            m_uGuiPageView?.Display();
+            m_uGuiPageView?.Display(args);
         }
 
         public override void HideView()
@@ -74,14 +76,20 @@ namespace TinaX.UIKit.UGUI.Page
 
         
 
-        public virtual void OnJoinUGUIGroup(UGUIPageGroup group)
+        public virtual void OnJoinUGUIGroup(UGUIPageGroup group, object[]? displayMessageArgs)
         {
             this.m_Parent = group;
-            this.m_ParentUGUI = group;
-            this.DisplayView();
+            this.m_ParentUGUI = group; //我们在子类中存了同样的玩意，用意是避免频繁的装箱
+            this.DisplayView(displayMessageArgs);
         }
 
-        
+        public override void OnLeaveGroup(UIPageGroup group)
+        {
+            base.OnLeaveGroup(group);
+            this.m_ParentUGUI = null;
+        }
+
+
 
 
         public void SetName(string name) 

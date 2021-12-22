@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace TinaX.UIKit.UGUI.Page.Group
 {
+#nullable enable
     public class UGUIPageGroup : UIPageGroup
     {
         protected Transform m_RootTransform;
@@ -21,7 +22,7 @@ namespace TinaX.UIKit.UGUI.Page.Group
 
         public Transform RootTransform => m_RootTransform;
 
-        public override void Push(UIPageBase page)
+        public override void Push(UIPageBase page, object[]? displayMessageArgs = null)
         {
             if (page == null)
                 throw new ArgumentNullException(nameof(page));
@@ -29,11 +30,11 @@ namespace TinaX.UIKit.UGUI.Page.Group
             if(page is UGUIPage)
             {
                 var uPage = page as UGUIPage;
-                uPage.OnJoinUGUIGroup(this);
+                uPage!.OnJoinUGUIGroup(this, displayMessageArgs);
             }
             else
             {
-                page.OnJoinGroup(this);
+                page.OnJoinGroup(this, displayMessageArgs);
             }
 
             //重新排序
@@ -56,4 +57,5 @@ namespace TinaX.UIKit.UGUI.Page.Group
             return this;
         }
     }
+#nullable restore
 }

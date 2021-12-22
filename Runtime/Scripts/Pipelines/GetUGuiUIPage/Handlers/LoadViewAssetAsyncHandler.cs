@@ -13,7 +13,7 @@ namespace TinaX.UIKit.UGUI.Pipelines.GetUGuiUIPage.Handlers
 
         public async UniTask GetPageAsync(GetUGuiPageContext context, GetUGuiPagePayload payload, CancellationToken cancellationToken)
         {
-            if(payload.Options.LoadPrefab)
+            if(payload.Args.LoadPrefab)
             {
                 if (payload.UIPage != null)
                     await payload.UIPage.ReadyViewAsync(cancellationToken);

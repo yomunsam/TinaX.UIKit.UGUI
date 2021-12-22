@@ -22,7 +22,7 @@ namespace TinaX.UIKit.UGUI.Page.View
         protected UnityEngine.Canvas? m_UnityCanvas;
 
 
-        public override void Display()
+        public override void Display(object[]? args)
         {
             if(m_uGuiGameObject == null)
             {
@@ -44,13 +44,15 @@ namespace TinaX.UIKit.UGUI.Page.View
 
             if (m_uGuiPage.Controller != null)
             {
-                //导航器
-
                 //挂载XComponent
                 var xbehaviour = new XBehaviourWarpper(m_uGuiPage.Controller, m_uGuiPage.XBehaviourWrapperReflectionProvider);
                 var xcomponent = m_uGuiGameObject.GetComponentOrAdd<TinaX.XComponent.XComponent>();
                 xcomponent.AddBehaviour(xbehaviour);
             }
+
+
+            //发送消息
+            m_Page.SendUIDisplayMessage(args);
         }
 
         /// <summary>

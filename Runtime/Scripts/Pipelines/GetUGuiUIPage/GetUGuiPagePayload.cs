@@ -8,15 +8,15 @@ namespace TinaX.UIKit.UGUI.Pipelines.GetUGuiUIPage
 #nullable enable
     public class GetUGuiPagePayload
     {
-        public GetUGuiPagePayload(GetUGUIPageOptions options)
+        public GetUGuiPagePayload(GetUGUIPageArgs args)
         {
-            Options = options;
-            PageUriLower = options.PageUri.ToLower();
+            Args = args;
+            PageUriLower = args.PageUri.ToLower();
         }
 
         public string PageUriLower { get; set; }
 
-        public GetUGUIPageOptions Options { get; }
+        public GetUGUIPageArgs Args { get; }
 
         /// <summary>
         /// 加载 uGUI View(也就是Prefab)的资产加载路径

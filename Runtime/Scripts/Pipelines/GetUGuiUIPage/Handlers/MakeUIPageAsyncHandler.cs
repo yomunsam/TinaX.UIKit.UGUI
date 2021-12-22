@@ -2,6 +2,7 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using TinaX.Exceptions;
+using TinaX.UIKit.UGUI.Page.Navigator;
 
 namespace TinaX.UIKit.UGUI.Pipelines.GetUGuiUIPage.Handlers
 {
@@ -14,12 +15,20 @@ namespace TinaX.UIKit.UGUI.Pipelines.GetUGuiUIPage.Handlers
             if (payload.ViewProvider == null)
                 throw new XException("ViewProvider cannot be null");
 
-            if(payload.Options.PageController != null && !(payload.Options.PageController is UGUIPageController))
+            if(payload.Args.PageController != null && !(payload.Args.PageController is UGUIPageController))
             {
                 throw new XException("PageController must be \"UGUIPageController\"");
             }
-            var ugui_controller = payload.Options.PageController as UGUIPageController;
-            payload.UIPage = new Page.UGUIPage(payload.Options.PageUri, payload.ViewProvider!, ugui_controller);
+            var ugui_controller = payload.Args.PageController as UGUIPageController;
+            payload.UIPage = new Page.UGUIPage(payload.Args.PageUri, payload.ViewProvider!, ugui_controller);
+
+            if(ugui_controller != null)
+            {
+                //Controller导航器
+                var navigator = new UGUIPageNavigator(payload.UIPage, context.UIKit, context.UIKitUGUI);
+                ugui_controller.Navigation = navigator;
+            }
+
             return UniTask.CompletedTask;
         }
     }

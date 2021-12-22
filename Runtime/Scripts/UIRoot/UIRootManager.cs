@@ -77,9 +77,11 @@ namespace TinaX.UIKit.UGUI.UIRoot
                 //UIKit Canvas Component 
                 var uiKitCanvasComponent = uiRootGameObject.GetComponentOrAdd<UIKitUGUICanvasComponentBase>();
                 uiKitCanvasComponent.EnsureUIKitCanvas();
-                var uiKitCanvas = uiKitCanvasComponent.UIKitCanvas;
+                var uiKitCanvas = uiKitCanvasComponent.UIKitCanvas!;
 
-                if(!m_UIKitUGUICanvasComponentDict.ContainsKey(sortingLayerId))
+                uiKitCanvas!.SortingLayerId = sortingLayerId;
+
+                if (!m_UIKitUGUICanvasComponentDict.ContainsKey(sortingLayerId))
                 {
                     m_UIKitUGUICanvasComponentDict.Add(sortingLayerId, uiKitCanvasComponent);
                 }

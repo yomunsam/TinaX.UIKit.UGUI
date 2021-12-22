@@ -28,12 +28,12 @@ namespace TinaX.UIKit.UGUI.Page.View
             {
                 if (m_uGuiPage.Parent == null)
                     Debug.LogError("The UI page does not specify a UI group, but is called to display view");
-                m_uGuiGameObject = GameObject.Instantiate(m_uGuiPrefab, m_uGuiPage.ParentUGUI?.RootTransform);
+                m_uGuiGameObject = GameObject.Instantiate(m_uGuiPrefab, m_uGuiPage?.UGUICanvas?.RootTransform);
                 if (m_uGuiGameObject.name.Length > 7)
                     m_uGuiGameObject.name = m_uGuiGameObject.name.Substring(0, m_uGuiGameObject.name.Length - 7);
 
-                m_uGuiPage.SetName(m_uGuiGameObject.name);
-                m_uGuiPage.SetTransform(m_uGuiGameObject.transform);
+                m_uGuiPage!.SetName(m_uGuiGameObject.name);
+                m_uGuiPage!.SetTransform(m_uGuiGameObject.transform);
 
                 //Sort Order
                 m_UnityCanvas = m_uGuiGameObject.GetComponentOrAdd<UnityEngine.Canvas>();

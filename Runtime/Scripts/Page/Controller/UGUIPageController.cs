@@ -1,4 +1,5 @@
 ﻿using TinaX.UIKit.Page.Controller;
+using TinaX.UIKit.Page.Navigator;
 using TinaX.UIKit.UGUI.Page;
 using UnityEngine;
 
@@ -23,6 +24,9 @@ namespace TinaX.UIKit.UGUI
                 return m_uGuiPage?.Transform;
             }
         }
+
+        public new IPageNavigator<UGUIPage, OpenUGUIArgs>? Navigation { get; set; }
+
     }
 #nullable restore
 }

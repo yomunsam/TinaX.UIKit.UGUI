@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using TinaX.UIKit.Page;
 using TinaX.UIKit.Page.Group;
 using TinaX.UIKit.Page.View;
+using TinaX.UIKit.UGUI.Canvas;
 using TinaX.UIKit.UGUI.Page.Group;
 using TinaX.UIKit.UGUI.Page.View;
 using TinaX.UIKit.UGUI.Services;
@@ -16,23 +17,16 @@ namespace TinaX.UIKit.UGUI.Page
 
     public class UGUIPage : UIPageBase
     {
+        //------------构造函数字段--------------------------------------------------------------------------------------------------------------
 
         protected IPageViewProvider<UGUIPageView, UGUIPage> m_uGuiViewProvider { get; set; }
 
-        protected UGUIPageView? m_uGuiPageView { get; set; }
-
         protected UGUIPageController? m_UGuiPageController { get; set; }
-
-        protected UGUIPageGroup? m_ParentUGUI { get; set; }
-
-        /// <summary>
-        /// 这里应该是指View （也就是UI Prefab实例化之后的GameObject）的Transform
-        /// </summary>
-        protected Transform? m_Transform { get; set; }
 
         protected IWrapperReflectionProvider? m_XBehaviourWrapperReflectionProvider { get; set; }
 
 
+        //------------构造函数-----------------------------------------------------------------------------------------------------------------
 
         public UGUIPage(string pageUri, IPageViewProvider<UGUIPageView, UGUIPage> viewProvider) : base(pageUri, viewProvider)
         {
@@ -47,6 +41,21 @@ namespace TinaX.UIKit.UGUI.Page
             m_XBehaviourWrapperReflectionProvider = xBehaviourWrapperReflectionProvider;
         }
 
+
+
+        //------------内部字段--------------------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// 这里应该是指View （也就是UI Prefab实例化之后的GameObject）的Transform
+        /// </summary>
+        protected Transform? m_Transform;
+
+        protected UGUIPageGroup? m_ParentUGUI;
+
+        protected UGUIPageView? m_uGuiPageView;
+
+        //------------公开属性----------------------------------------------------------------------------------------------------------------------
+
         public Transform? Transform => m_Transform;
 
         public UGUIPageController? UGUIController => m_UGuiPageController;
@@ -54,6 +63,22 @@ namespace TinaX.UIKit.UGUI.Page
         public IWrapperReflectionProvider? XBehaviourWrapperReflectionProvider => m_XBehaviourWrapperReflectionProvider;
 
         public UGUIPageGroup? ParentUGUI => m_ParentUGUI;
+
+        public UIKitUGUICanvas? UGUICanvas => m_ParentUGUI?.UGUICanvas;
+
+        public override int PageSize => 10; //UGUI每页Order占用10，以方便放一些东西
+
+        /// <summary>
+        /// 该UIPage是否使用遮罩
+        /// 这个属性注意仅由Group管理
+        /// </summary>
+        public bool UseMask { get; set; } 
+        public bool CloseByMask { get; set; }
+        public Color? MaskColor { get; set; }
+
+
+
+        //------------公开方法---------------------------------------------------------------------------------------------------------------------------
 
         public override async UniTask ReadyViewAsync(CancellationToken cancellationToken = default)
         {
@@ -74,7 +99,12 @@ namespace TinaX.UIKit.UGUI.Page
             throw new System.NotImplementedException();
         }
 
-        
+        public override void OnJoinGroup(UIPageGroup group, object[]? displayMessageArgs)
+        {
+            base.OnJoinGroup(group, displayMessageArgs);
+            if (m_Parent is UGUIPageGroup uGUIPageGroup)
+                m_ParentUGUI = uGUIPageGroup;
+        }
 
         public virtual void OnJoinUGUIGroup(UGUIPageGroup group, object[]? displayMessageArgs)
         {

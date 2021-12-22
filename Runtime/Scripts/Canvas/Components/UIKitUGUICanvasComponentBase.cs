@@ -23,7 +23,7 @@ namespace TinaX.UIKit.UGUI.Canvas
         {
             var defaultCanvasName = $"UIKit.UGUI-{this.gameObject.name}";
             if (m_UIKitCanvas == null)
-                m_UIKitCanvas = new UIKitUGUICanvas(new UGUIPageGroup(this.transform, "Root"), canvasName ?? defaultCanvasName);
+                m_UIKitCanvas = new UIKitUGUICanvas(new UGUIPageGroup("Root"), this.transform, canvasName ?? defaultCanvasName);
         }
 
         [ContextMenu("Print UI Tree")]

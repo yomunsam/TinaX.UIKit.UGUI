@@ -1,9 +1,6 @@
-﻿using System;
-using TinaX.UIKit.Canvas;
-using UnityEngine;
-using TinaX;
-using TinaX.UIKit.UGUI.Canvas;
+﻿using TinaX.UIKit.UGUI.Canvas;
 using TinaX.UIKit.UGUI.Page.Group;
+using UnityEngine;
 
 namespace TinaX.UIKit.UGUI.Components
 {
@@ -27,7 +24,7 @@ namespace TinaX.UIKit.UGUI.Components
         #region Unity Magic Methods
         void Awake()
         {
-            Canvas = new UIKitUGUICanvas(new UGUIPageGroup(this.transform, this.name), this.name);
+            Canvas = new UIKitUGUICanvas(new UGUIPageGroup(this.name), this.transform, this.name);
             if (DontDestroy)
                 this.gameObject.DontDestroyOnLoad();
         }

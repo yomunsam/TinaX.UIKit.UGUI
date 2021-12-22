@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using TinaX.Container;
 using TinaX.Core.Behaviours;
@@ -13,9 +14,13 @@ namespace TinaX.UIKit.UGUI
 {
     public class UIKitUGUIProvider : IUIKitProvider
     {
+        private readonly List<IAwakeBehaviour> m_AwakeBehaviours;
+        private readonly List<IStartBehaviour> m_StartBehaviours;
 
-        public UIKitUGUIProvider()
+        public UIKitUGUIProvider(List<IAwakeBehaviour> awakeBehaviours, List<IStartBehaviour> startBehaviours)
         {
+            this.m_AwakeBehaviours = awakeBehaviours;
+            this.m_StartBehaviours = startBehaviours;
         }
 
         public string ProviderName => UIKitUGUIConsts.ProviderName;
@@ -27,6 +32,15 @@ namespace TinaX.UIKit.UGUI
 
         public void ConfigureBehaviours(IBehaviourManager behaviour, IServiceContainer services)
         {
+            for(int i = 0; i < m_AwakeBehaviours.Count; i++)
+            {
+                behaviour.RegisterAwake(m_AwakeBehaviours[i]);
+            }
+
+            for (int i = 0; i < m_StartBehaviours.Count; i++)
+            {
+                behaviour.RegisterStart(m_StartBehaviours[i]);
+            }
         }
 
         public async UniTask StartAsync(IServiceContainer services, CancellationToken cancellationToken = default) //启动服务

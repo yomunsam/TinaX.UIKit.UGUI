@@ -1,12 +1,12 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
 using TinaX.Exceptions;
-using TinaX.UIKit.Page.Controller;
+using TinaX.UIKit.UGUI;
 using TinaX.UIKit.UGUI.Consts;
 using TinaX.UIKit.UGUI.Page;
 using TinaX.UIKit.UGUI.Services;
 
-namespace TinaX.UIKit.UGUI.UIKit
+namespace TinaX.UIKit
 {
 #nullable enable
     /// <summary>

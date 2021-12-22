@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TinaX.UIKit.UGUI.Packages.io.nekonya.tinax.uikit.ugui.Runtime.Scripts.Services.Args
+﻿namespace TinaX.UIKit.UGUI
 {
-    public class OpenUGUIArgs
+#nullable enable
+    public class OpenUGUIArgs : GetUGUIPageArgs
     {
+        public OpenUGUIArgs(string pageUri) : base(pageUri) { }
+
+        /// <summary>
+        /// 显示UI参数（启动参数）
+        /// </summary>
+        public object[]? UIDisplayArgs { get; set; }
     }
+#nullable restore
 }

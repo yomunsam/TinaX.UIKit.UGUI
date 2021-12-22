@@ -4,7 +4,6 @@ using Cysharp.Threading.Tasks;
 using TinaX.UIKit.Args;
 using TinaX.UIKit.Page.Navigator;
 using TinaX.UIKit.UGUI.Helper;
-using TinaX.UIKit.UGUI.Packages.io.nekonya.tinax.uikit.ugui.Runtime.Scripts.Services.Args;
 using TinaX.UIKit.UGUI.Services;
 
 namespace TinaX.UIKit.UGUI.Page.Navigator

@@ -89,7 +89,8 @@ namespace TinaX.UIKit.UGUI.Page
             this.m_ParentUGUI = null;
         }
 
-
+        public void SetXBehaviourWrapperReflectionProvider(IWrapperReflectionProvider wrapperReflectionProvider) 
+            => this.m_XBehaviourWrapperReflectionProvider = wrapperReflectionProvider;
 
 
         public void SetName(string name) 

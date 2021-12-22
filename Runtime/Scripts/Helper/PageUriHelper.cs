@@ -86,6 +86,12 @@ namespace TinaX.UIKit.UGUI.Helper
             }
             return source.Substring(0, last_slash);
         }
+
+        public static string AddSchemeIfNot(string source)
+        {
+            return source.ToLower().StartsWith(_uiKit_UGUI_Scheme_Lower) ? source : $"{_uiKit_UGUI_Scheme}{source}";
+        }
+
     }
 #nullable restore
 }

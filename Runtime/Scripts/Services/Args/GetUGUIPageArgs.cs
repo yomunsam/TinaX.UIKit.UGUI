@@ -20,6 +20,15 @@ namespace TinaX.UIKit.UGUI
         /// 在GetUIPage阶段加载Prefab
         /// </summary>
         public bool LoadPrefab { get; set; } = true;
+
+
+        public GetUIPageArgs GetGetUIPageArgs()
+        {
+            return new GetUIPageArgs(PageUri)
+            {
+                PageController = PageController,
+            };
+        }
     }
 #nullable restore
 }

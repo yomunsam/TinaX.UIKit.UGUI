@@ -31,11 +31,11 @@ namespace TinaX.UIKit.UGUI.Pipelines.GetUIPage
 
             if (!PageUriHelper.IsMatch(payload.PageUri))
                 return;
-            var getUIOptions = new GetUGUIPageArgs(payload.PageUri)
+            var getUGUIPageArgs = new GetUGUIPageArgs(payload.PageUri)
             {
                 PageController = payload.PageController
             };
-            var page = await m_UIKit_UGUI_Service.GetUIPageAsync(getUIOptions);
+            var page = await m_UIKit_UGUI_Service.GetUIPageAsync(getUGUIPageArgs);
             payload.UIPage = page;
 
             //加载完成，终止管线

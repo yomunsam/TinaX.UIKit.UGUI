@@ -35,6 +35,7 @@ namespace TinaX.UIKit.UGUI.Canvas
         protected UnityEngine.Canvas? m_BackgroundMaskCanvas;
         protected UnityEngine.UI.Image? m_BackgroundMaskImage;
         protected UnityEngine.UI.Button? m_BackgroundMaskButton;
+        //protected UGUIPage? m_BackgroundMaskTargetPage;
 
         public UGUIPageGroup RootGroupUGUI
         {
@@ -109,9 +110,12 @@ namespace TinaX.UIKit.UGUI.Canvas
                 m_BackgroundMaskButton.onClick.AddListener(() =>
                 {
                     Debug.Log("Todo:关闭UI操作");
+                    page.ClosePage();
                 });
             }
         }
+    
+        
     }
 #nullable restore
 }

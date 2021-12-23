@@ -14,7 +14,7 @@ namespace TinaX.UIKit.UGUI.Services
         /// 把UI压到UGUI屏幕空间 的默认简化方法
         /// </summary>
         /// <param name="page"></param>
-        void PushScreenUI(UGUIPage page, object[]? displayMessageArgs = null);
+        void PushScreenUI(UGUIPage page, object?[]? displayMessageArgs = null);
     }
 #nullable restore
 }

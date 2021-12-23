@@ -22,7 +22,7 @@ namespace TinaX.UIKit.UGUI.Page.View
         protected UnityEngine.Canvas? m_UnityCanvas;
 
 
-        public override void Display(object[]? args)
+        public override void Display(object?[]? args)
         {
             if(m_uGuiGameObject == null)
             {

@@ -62,7 +62,7 @@ namespace TinaX.UIKit.UGUI.Page.Group
 
         //------------公开方法们---------------------------------------------------------------------------------------
 
-        public override void Push(UIPageBase page, object[]? displayMessageArgs = null)
+        public override void Push(UIPageBase page, object?[]? displayMessageArgs = null)
         {
             if (page == null)
                 throw new ArgumentNullException(nameof(page));
@@ -114,7 +114,7 @@ namespace TinaX.UIKit.UGUI.Page.Group
             return this;
         }
 
-        public override void OnJoinGroup(UIPageGroup group, object[]? displayMessageArgs)
+        public override void OnJoinGroup(UIPageGroup group, object?[]? displayMessageArgs)
         {
             base.OnJoinGroup(group, displayMessageArgs);
             if(m_Parent is UGUIPageGroup uGUIPageGroup)
@@ -125,6 +125,21 @@ namespace TinaX.UIKit.UGUI.Page.Group
         {
             base.OnLeaveGroup(group);
             m_ParentUGUI = null;
+        }
+
+
+        public override void Remove(UIPageBase page)
+        {
+            base.Remove(page);
+            //从UI栈上移除之后，在UGUI这边还需要做更多操作
+            if(page is UGUIPage uGuiPage)
+            {
+                //看看有没有遮罩
+                if (uGuiPage.UseMask)
+                {
+                    //根据UI栈推断这个当前Page和这个
+                }
+            }
         }
 
         //------------内部方法们-----------------------------------------------------------------------------------------------------------

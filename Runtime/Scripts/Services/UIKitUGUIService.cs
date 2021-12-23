@@ -161,7 +161,7 @@ namespace TinaX.UIKit.UGUI.Services
         /// <param name="displayMessageArgs">传递给UI的启动参数</param>
         /// <returns></returns>
         /// <exception cref="XException"></exception>
-        public void PushScreenUI(UGUIPage page, object[]? displayMessageArgs = null)
+        public void PushScreenUI(UGUIPage page, object?[]? displayMessageArgs = null)
         {
             if (!m_Initialized)
                 throw new XException($"{UIKitUGUIConsts.ProviderName} not ready.");

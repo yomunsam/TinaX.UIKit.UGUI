@@ -76,7 +76,7 @@ namespace TinaX.UIKit.UGUI.Page
         public bool CloseByMask { get; set; }
         public Color? MaskColor { get; set; }
 
-
+        public virtual float RemoveMaskDelayTime => 0; //Todo: UI动画等原因需要延迟
 
         //------------公开方法---------------------------------------------------------------------------------------------------------------------------
 
@@ -89,7 +89,7 @@ namespace TinaX.UIKit.UGUI.Page
             }
         }
 
-        public override void DisplayView(object[]? args)
+        public override void DisplayView(object?[]? args)
         {
             m_uGuiPageView?.Display(args);
         }
@@ -99,14 +99,14 @@ namespace TinaX.UIKit.UGUI.Page
             throw new System.NotImplementedException();
         }
 
-        public override void OnJoinGroup(UIPageGroup group, object[]? displayMessageArgs)
+        public override void OnJoinGroup(UIPageGroup group, object?[]? displayMessageArgs)
         {
             base.OnJoinGroup(group, displayMessageArgs);
             if (m_Parent is UGUIPageGroup uGUIPageGroup)
                 m_ParentUGUI = uGUIPageGroup;
         }
 
-        public virtual void OnJoinUGUIGroup(UGUIPageGroup group, object[]? displayMessageArgs)
+        public virtual void OnJoinUGUIGroup(UGUIPageGroup group, object?[]? displayMessageArgs)
         {
             this.m_Parent = group;
             this.m_ParentUGUI = group; //我们在子类中存了同样的玩意，用意是避免频繁的装箱
@@ -129,14 +129,21 @@ namespace TinaX.UIKit.UGUI.Page
         public void SetTransform(Transform transform) 
             => m_Transform = transform;
 
-        public override void ClosePage()
+        public override void ClosePage(params object?[]? closeMessageArgs)
         {
-            throw new System.NotImplementedException();
+            //计算延迟，如UI关闭动画，需要等UI动画结束之后再处理遮罩等等
+            //Todo ...
+
+            //首先把自己从Group中移除
+            m_Parent?.Remove(this);
+
+            //执行销毁
+            this.DestroyPage();
         }
 
         public override void DestroyPage()
         {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
         }
     }
 

@@ -27,7 +27,7 @@ namespace TinaX.UIKit
         {
             var uguikit = uikit.GetUIKitUGUI();
             var page = await uguikit.GetUIPageAsync(args, cancellationToken);
-            uguikit.PushScreenUI(page, args.UIDisplayArgs);
+            uguikit.PushScreenUI(page, args.PushToGroupArgs?.DisplayMessageArgs);
             return page;
         }
 

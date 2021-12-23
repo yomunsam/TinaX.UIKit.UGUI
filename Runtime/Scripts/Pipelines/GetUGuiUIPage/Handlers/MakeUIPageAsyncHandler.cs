@@ -21,6 +21,7 @@ namespace TinaX.UIKit.UGUI.Pipelines.GetUGuiUIPage.Handlers
             }
             var ugui_controller = payload.Args.PageController as UGUIPageController;
             payload.UIPage = new Page.UGUIPage(payload.Args.PageUri, payload.ViewProvider!, ugui_controller, payload.Args.XBehaviourWrapperReflectionProvider);
+            payload.UIPage.ControllerReflectionProvider = payload.Args.ControllerReflectionProvider ?? context.UIKit.DefaultControllerReflectionProvider;
 
             if(ugui_controller != null)
             {

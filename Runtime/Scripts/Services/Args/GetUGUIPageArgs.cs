@@ -16,6 +16,8 @@ namespace TinaX.UIKit.UGUI
 
         public IWrapperReflectionProvider? XBehaviourWrapperReflectionProvider { get; set; }
 
+        public IControllerReflectionProvider? ControllerReflectionProvider { get; set; }
+
         /// <summary>
         /// 在GetUIPage阶段加载Prefab
         /// </summary>

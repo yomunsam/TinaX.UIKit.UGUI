@@ -128,6 +128,16 @@ namespace TinaX.UIKit.UGUI.Page
 
         public void SetTransform(Transform transform) 
             => m_Transform = transform;
+
+        public override void ClosePage()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void DestroyPage()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 
 

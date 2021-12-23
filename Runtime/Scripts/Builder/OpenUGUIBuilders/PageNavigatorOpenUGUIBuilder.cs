@@ -3,6 +3,7 @@ using Cysharp.Threading.Tasks;
 using TinaX.UIKit.Page.Navigator;
 using TinaX.UIKit.UGUI.Page;
 using TinaX.XComponent.Warpper.ReflectionProvider;
+using UnityEngine;
 
 namespace TinaX.UIKit.UGUI.Builder.OpenUGUIBuilders
 {
@@ -33,9 +34,11 @@ namespace TinaX.UIKit.UGUI.Builder.OpenUGUIBuilders
             return this;
         }
 
-        public PageNavigatorOpenUGUIBuilder SetDisplayMessageArgs(params object[] args)
+        public PageNavigatorOpenUGUIBuilder SetDisplayMessageArgs(params object?[] args)
         {
-            this.m_OpenUGuiArgs.UIDisplayArgs = args;
+            if (m_OpenUGuiArgs.PushToGroupArgs == null)
+                m_OpenUGuiArgs.PushToGroupArgs = new Page.Group.PushUGUIPageArgs();
+            m_OpenUGuiArgs.PushToGroupArgs.DisplayMessageArgs = args;
             return this;
         }
 
@@ -51,15 +54,61 @@ namespace TinaX.UIKit.UGUI.Builder.OpenUGUIBuilders
         }
 
         /// <summary>
-        /// 启用UI背景遮罩
+        /// 设置UI背景遮罩
         /// </summary>
         /// <param name="useMask"></param>
         /// <returns></returns>
         public PageNavigatorOpenUGUIBuilder SetUseBackgroundMask(bool useMask = true)
         {
-            this.m_OpenUGuiArgs.UseBackgroundMask = useMask;
+            if (m_OpenUGuiArgs.PushToGroupArgs == null)
+                m_OpenUGuiArgs.PushToGroupArgs = new Page.Group.PushUGUIPageArgs();
+            m_OpenUGuiArgs.PushToGroupArgs.UseBackgroundMask = useMask;
             return this;
         }
+
+        /// <summary>
+        /// 设置UI背景遮罩
+        /// </summary>
+        /// <param name="useMask">是否使用遮罩</param>
+        /// <param name="closeByMask">点击遮罩可关闭UI（点击空白处关闭）</param>
+        /// <param name="maskColor">指定背景遮罩颜色</param>
+        /// <returns></returns>
+        public PageNavigatorOpenUGUIBuilder SetUseBackgroundMask(bool useMask, bool closeByMask, Color? maskColor = null)
+        {
+            if (m_OpenUGuiArgs.PushToGroupArgs == null)
+                m_OpenUGuiArgs.PushToGroupArgs = new Page.Group.PushUGUIPageArgs();
+            m_OpenUGuiArgs.PushToGroupArgs.UseBackgroundMask = useMask;
+            m_OpenUGuiArgs.PushToGroupArgs.CloseByMask = closeByMask;
+            m_OpenUGuiArgs.PushToGroupArgs.BackgroundMaskColor = maskColor;
+            return this;
+        }
+
+        /// <summary>
+        /// UI页可否在点击遮罩时关闭（点击空白处关闭）
+        /// </summary>
+        /// <param name="closeByMask"></param>
+        /// <returns></returns>
+        public PageNavigatorOpenUGUIBuilder SetCloseByBackgroundMask(bool closeByMask = true)
+        {
+            if (m_OpenUGuiArgs.PushToGroupArgs == null)
+                m_OpenUGuiArgs.PushToGroupArgs = new Page.Group.PushUGUIPageArgs();
+            m_OpenUGuiArgs.PushToGroupArgs.CloseByMask = closeByMask;
+            return this;
+        }
+
+        /// <summary>
+        /// 设置UI遮罩颜色
+        /// </summary>
+        /// <param name="color"></param>
+        /// <returns></returns>
+        public PageNavigatorOpenUGUIBuilder SetBackgroundMaskColor(Color color)
+        {
+            if (m_OpenUGuiArgs.PushToGroupArgs == null)
+                m_OpenUGuiArgs.PushToGroupArgs = new Page.Group.PushUGUIPageArgs();
+            m_OpenUGuiArgs.PushToGroupArgs.BackgroundMaskColor = color;
+            return this;
+        }
+
 
 
         public UniTask<UGUIPage> OpenUIAsync(CancellationToken cancellationToken = default)

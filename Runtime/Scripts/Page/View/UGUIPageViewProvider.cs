@@ -45,7 +45,7 @@ namespace TinaX.UIKit.UGUI.Page.View
         public async UniTask<UGUIPageView> GetPageViewAsync(UGUIPage page, CancellationToken cancellationToken = default)
         {
             var ugui_prefab = await m_AssetService.LoadAsync<GameObject>(m_ViewUri, cancellationToken);
-            var pageView = new UGUIPageView(m_ViewUri, ugui_prefab, page);
+            var pageView = new UGUIPageView(m_ViewUri, ugui_prefab, page, m_AssetService);
             return pageView;
         }
     }

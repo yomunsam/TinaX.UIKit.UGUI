@@ -57,13 +57,7 @@ namespace TinaX.UIKit.UGUI.Canvas
         /// <param name="maskColor"></param>
         public virtual void UseBackgroundMask(UGUIPage page, bool closeByMask, Color? maskColor)
         {
-            var group = page.Parent;
-            //我们还是看一下需不需要处理
-            var lastChildGroup = m_RootGroupUGUI!.GetLastChildUGUIGroup();
-            if (lastChildGroup!.UseMask && group != lastChildGroup)
-            {
-                return; //不需要处理，因为当前最顶级的Group已经再使用Mask，并且给我们的Page不在最顶级的Group中
-            }
+            //Group自己算好“要不要处理遮罩”这件事之后再嗲用过来，我们这里不做判断
 
             if (m_BackgroundMaskGameObject == null)
             {
@@ -90,6 +84,7 @@ namespace TinaX.UIKit.UGUI.Canvas
             {
                 m_BackgroundMaskImage = m_BackgroundMaskGameObject.GetComponentOrAdd<UnityEngine.UI.Image>();
                 m_BackgroundMaskImage.raycastTarget = true;
+                m_BackgroundMaskImage.color = maskColor ?? Color.black;
             }
 
             if(m_BackgroundMaskButton == null)
@@ -100,20 +95,28 @@ namespace TinaX.UIKit.UGUI.Canvas
             }
 
             //------处理当次遮罩------------
-
+            m_BackgroundMaskGameObject.Show();
             m_BackgroundMaskCanvas.sortingOrder = page.Order - 1; //设置SortingOrder是其目标Page的序号-1
-            m_BackgroundMaskImage.color = maskColor ?? Color.black; //设置遮罩颜色 Todo: 默认色的功能还没有
+            if (maskColor != null)
+                m_BackgroundMaskImage.color = maskColor.Value; //设置遮罩颜色 Todo: 默认色的功能还没有
             m_BackgroundMaskButton.onClick.RemoveAllListeners();
             if (closeByMask)
             {
                 m_BackgroundMaskButton.onClick.AddListener(() =>
                 {
-                    Debug.Log("Todo:关闭UI操作");
+                    //Debug.Log("Todo:关闭UI操作");
                     page.ClosePage();
                 });
             }
         }
     
+        public virtual void RemoveBackgroundMask()
+        {
+            if (m_BackgroundMaskGameObject != null)
+                m_BackgroundMaskGameObject.Hide();
+            if (m_BackgroundMaskCanvas != null)
+                m_BackgroundMaskCanvas.sortingOrder = 0;
+        }
         
     }
 #nullable restore

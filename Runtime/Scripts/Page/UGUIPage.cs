@@ -1,9 +1,11 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using TinaX.UIKit.Page;
 using TinaX.UIKit.Page.Group;
 using TinaX.UIKit.Page.View;
 using TinaX.UIKit.UGUI.Canvas;
+using TinaX.UIKit.UGUI.Page.BackgroundMask;
 using TinaX.UIKit.UGUI.Page.Group;
 using TinaX.UIKit.UGUI.Page.View;
 using TinaX.XComponent.Warpper.ReflectionProvider;
@@ -13,7 +15,7 @@ namespace TinaX.UIKit.UGUI.Page
 {
 #nullable enable
 
-    public class UGUIPage : UIPageBase, IUGUIPage
+    public class UGUIPage : UIPageBase, IUGUIPage, IBackgroundMaskInfo
     {
         //------------构造函数字段--------------------------------------------------------------------------------------------------------------
 
@@ -70,9 +72,9 @@ namespace TinaX.UIKit.UGUI.Page
         /// 该UIPage是否使用遮罩
         /// 这个属性注意仅由Group管理
         /// </summary>
-        public bool UseMask { get; set; } 
-        public bool CloseByMask { get; set; }
-        public Color? MaskColor { get; set; }
+        public bool IsUseBackgroundMask { get; set; } 
+        public bool CloseByBackgroundMask { get; set; }
+        public Color? BackgroundMaskColor { get; set; }
 
         public virtual float RemoveMaskDelayTime => 0; //Todo: UI动画等原因需要延迟
 
@@ -129,7 +131,7 @@ namespace TinaX.UIKit.UGUI.Page
 
         public override void ClosePage(params object?[]? closeMessageArgs)
         {
-            if (m_Destroyed)
+            if (m_Closed)
                 return;
             //计算延迟，如UI关闭动画，需要等UI动画结束之后再处理遮罩等等
             //Todo ...
@@ -138,16 +140,17 @@ namespace TinaX.UIKit.UGUI.Page
             m_Parent?.Remove(this);
 
             //发送个事件
+            SendUIClosedMessage(closeMessageArgs);
 
-            //执行销毁
-            this.DestroyPage();
-        }
-
-        public override void DestroyPage()
-        {
-            //throw new System.NotImplementedException();
             //销毁View
+            if(m_uGuiPageView != null)
+            {
+                m_uGuiPageView.Destroy(null); //Todo: 销毁延迟
+            }
+            m_uGuiPageView = null;
+            m_Transform = null;
         }
+
 
 
 

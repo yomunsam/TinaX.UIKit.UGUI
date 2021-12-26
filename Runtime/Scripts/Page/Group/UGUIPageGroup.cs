@@ -4,12 +4,13 @@ using TinaX.UIKit.Canvas;
 using TinaX.UIKit.Page;
 using TinaX.UIKit.Page.Group;
 using TinaX.UIKit.UGUI.Canvas;
+using TinaX.UIKit.UGUI.Page.BackgroundMask;
 using UnityEngine;
 
 namespace TinaX.UIKit.UGUI.Page.Group
 {
 #nullable enable
-    public class UGUIPageGroup : UIPageGroup, IUGUIGroup
+    public class UGUIPageGroup : UIPageGroup, IUGUIGroup, IBackgroundMask
     {
         //------------构造函数们-----------------------------------------------------------------------------------------
         public UGUIPageGroup() : base()
@@ -58,7 +59,7 @@ namespace TinaX.UIKit.UGUI.Page.Group
         /// 该UIGroup中是否有某个元素使用遮罩
         /// 这个属性注意仅由Group管理
         /// </summary>
-        public bool UseMask { get; set; }
+        public bool IsUseBackgroundMask { get; set; }
 
         //------------公开方法们---------------------------------------------------------------------------------------
 
@@ -125,21 +126,26 @@ namespace TinaX.UIKit.UGUI.Page.Group
         {
             base.OnLeaveGroup(group);
             m_ParentUGUI = null;
+            m_UGUICanvas = null; //如果我们离开了一个组，说明我们以前进入过一个组，这就说明我们肯定不是Canvas的根级组，所以要把Canvas清空；
         }
 
 
-        public override void Remove(UIPageBase page)
+        public override void Remove(UIPageBase child)
         {
-            base.Remove(page);
-            //从UI栈上移除之后，在UGUI这边还需要做更多操作
-            if(page is UGUIPage uGuiPage)
+            //从UI栈上移除之前，在UGUI这边还需要做更多操作
+            //检查是否需要处理背景遮罩
+            if (child is IBackgroundMask pageMask)
             {
-                //看看有没有遮罩
-                if (uGuiPage.UseMask)
+                if (pageMask.IsUseBackgroundMask)
                 {
-                    //根据UI栈推断这个当前Page和这个
+                    //将要被移除的子项使用了背景遮罩，我们需要为其做处理吗？
+                    ChildNotUseBackgroundMask(child);
                 }
             }
+
+
+            base.Remove(child); //然后这里会执行UI栈的实际移除
+            
         }
 
         //------------内部方法们-----------------------------------------------------------------------------------------------------------
@@ -154,12 +160,12 @@ namespace TinaX.UIKit.UGUI.Page.Group
         protected virtual void UseBackgroundMask(ref UGUIPage page, bool closeByMask, Color? maskColor)
         {
             //给Page加上标记
-            page.UseMask = true;
-            page.CloseByMask = closeByMask;
-            page.MaskColor = maskColor;
+            page.IsUseBackgroundMask = true;
+            page.CloseByBackgroundMask = closeByMask;
+            page.BackgroundMaskColor = maskColor;
 
             //需要为当前页面真的动手执行遮罩操作吗？
-            if (this.UseMask)
+            if (this.IsUseBackgroundMask)
             {
                 //本组已经有某个Mask使用了遮罩，所以如果给我们的目标Page不是最顶层Page的话，就不用管了
                 var last_page = m_Children.LastOrDefault();
@@ -200,9 +206,9 @@ namespace TinaX.UIKit.UGUI.Page.Group
         /// </summary>
         /// <param name="useMask"></param>
         /// <returns></returns>
-        private void SetUseMaskAndParents(bool useMask)
+        protected void SetUseMaskAndParents(bool useMask)
         {
-            this.UseMask = UseMask;
+            this.IsUseBackgroundMask = useMask;
 
             if (m_Parent != null && m_ParentUGUI == null)
             {
@@ -213,6 +219,112 @@ namespace TinaX.UIKit.UGUI.Page.Group
             {
                 m_ParentUGUI?.SetUseMaskAndParents(useMask);
             }
+        }
+
+        /// <summary>
+        /// 当这个方法被调用，意味着我们的某个子项不再使用UI遮罩
+        /// </summary>
+        protected void ChildNotUseBackgroundMask(UIPageBase child)
+        {
+            /*
+             * 当我们的某一个子项不再使用背景遮罩了
+             * 1. 检查我们是否要为其处理遮罩问题，（如果有A、B、C三页使用了遮罩，移除的是B或者A的话，就不用处理）
+             * 2. 检查我们的UI栈中还有没有其它子项使用了背景遮罩，
+             *      - 如果有，为其设置遮罩
+             *      - 如果没有了，告诉上级组
+             *          - 如果我们是顶级组，那通知Canvas移除遮罩
+             */
+
+            bool remove_mask = false; //如果我们需要remove mask，则把这里设为true
+            IBackgroundMask? last_useMask_child = null;
+
+            for(int i= m_Children.Count-1; i>=0; i--) //直接倒着找就好
+            {
+                if(m_Children[i] is IBackgroundMask maskPage)
+                {
+                    if (maskPage.IsUseBackgroundMask)
+                    {
+                        if(maskPage == child && !remove_mask)
+                        {
+                            //我们倒序找到的第一个使用了背景遮罩的child就是我们要移除的child，所以
+                            remove_mask = true;
+                            continue; //然后我们不要断掉循环， 我们继续往下看看，当前UI栈还有没有其他使用了背景遮罩的
+                        }
+
+                        if (remove_mask) //这个设为true了，说明我们倒序查找到了child前面，那么，我们第一个要找的就是它
+                        {
+                            last_useMask_child = maskPage;
+                            break; //现在我们可以断掉循环了
+                        }
+
+                    }
+                }
+            }
+
+            if (!remove_mask)
+                return; //不用管了
+
+            if(last_useMask_child == null)
+            {
+                //我们整个组应该都没有使用遮罩的子项了，也就是说
+                this.IsUseBackgroundMask = false; //我们组本身就不使用遮罩了
+                if(m_ParentUGUI != null)
+                {
+                    //告诉上级组整个情况
+                    m_ParentUGUI.ChildNotUseBackgroundMask(this);
+                }
+                else
+                {
+                    //我们自己就是顶级组，
+                    m_UGUICanvas?.RemoveBackgroundMask(); //整个UI树都没有使用遮罩的了
+                }
+            }
+            else
+            {
+                //我们当前UI栈下有另一位同学使用了遮罩，下面把话筒塞它嘴里
+                if(last_useMask_child is IBackgroundMaskInfo maskPage)
+                {
+                    //这种情况最简单了
+                    m_UGUICanvas?.UseBackgroundMask((UGUIPage)maskPage, maskPage.CloseByBackgroundMask, maskPage.BackgroundMaskColor);
+                }
+                else
+                {
+                    //这是个Group?
+                    if(last_useMask_child is UGUIPageGroup maskGroup)
+                    {
+                        var last_page = maskGroup.GetLastUsedBackgroundMaskPage();
+                        m_UGUICanvas?.UseBackgroundMask(last_page!, last_page!.CloseByBackgroundMask, last_page!.BackgroundMaskColor);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获取当前UI栈中最顶层一个使用了背景遮罩的【UGUIPage】
+        /// </summary>
+        /// <returns></returns>
+        protected UGUIPage? GetLastUsedBackgroundMaskPage()
+        {
+            for(int i = m_Children.Count - 1; i >= 0; i--)
+            {
+                if(m_Children[i] is IBackgroundMask maskChild)
+                {
+                    if (maskChild.IsUseBackgroundMask)
+                    {
+                        if (maskChild is UGUIPageGroup group)
+                        {
+                            //是个组啊，
+                            return group.GetLastUsedBackgroundMaskPage();
+                        }
+                        else if (maskChild is UGUIPage page)
+                            return page;
+                        else
+                            return null;
+                    }
+                }
+            }
+
+            return null;
         }
     }
 #nullable restore

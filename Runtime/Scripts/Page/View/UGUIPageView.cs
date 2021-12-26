@@ -1,8 +1,10 @@
-﻿using TinaX.UIKit.Page.View;
-using TinaX.XComponent.Warpper;
-using UnityEngine;
-using TinaX.XComponent;
+﻿using TinaX.Services;
+using TinaX.UIKit.Page.View;
 using TinaX.UIKit.UIMessage;
+using TinaX.XComponent;
+using TinaX.XComponent.Warpper;
+using UniRx;
+using UnityEngine;
 
 namespace TinaX.UIKit.UGUI.Page.View
 {
@@ -12,11 +14,13 @@ namespace TinaX.UIKit.UGUI.Page.View
     {
         protected readonly GameObject m_uGuiPrefab;
         protected readonly UGUIPage m_uGuiPage;
+        private readonly IAssetService m_AssetService;
 
-        public UGUIPageView(string viewUri, GameObject uguiPrefab, UGUIPage page) : base(viewUri, page)
+        public UGUIPageView(string viewUri, GameObject uguiPrefab, UGUIPage page, IAssetService assetService) : base(viewUri, page)
         {
             this.m_uGuiPrefab = uguiPrefab;
             m_uGuiPage = page;
+            this.m_AssetService = assetService;
         }
 
         protected GameObject? m_uGuiGameObject;
@@ -54,6 +58,47 @@ namespace TinaX.UIKit.UGUI.Page.View
 
             //发送消息
             m_Page.SendUIDisplayMessage(args);
+        }
+
+        public override void Destroy(System.TimeSpan? delayTime = null)
+        {
+            if (m_Destroyed)
+                return;
+
+            if(m_uGuiGameObject != null)
+            {
+                if (delayTime != null)
+                {
+                    Observable.Timer(delayTime.Value)
+                        .Subscribe(_ => { DestroyNow(); })
+                        .AddTo(m_uGuiGameObject);
+                }
+                else
+                {
+                    DestroyNow();
+                }
+            }
+            
+        }
+
+        private void DestroyNow()
+        {
+            if (m_Destroyed)
+                return;
+            //销毁GameObject
+            if (m_uGuiGameObject != null)
+            {
+                m_uGuiGameObject.Destroy();
+            }
+            m_uGuiGameObject = null; //因为GameObject重载了 !=、==这些符号，所以你以为这儿是null的其实它可能不是null，所以手动把它设一遍null以防内存泄露（奇妙的设计）
+
+            //释放Prefab
+            if(m_uGuiPrefab != null)
+            {
+                m_AssetService.Release(m_uGuiPrefab);
+            }
+            m_UnityCanvas = null; //释放引用，其实照理说也没必要，强迫症
+            m_Destroyed = true;
         }
 
         /// <summary>

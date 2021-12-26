@@ -9,7 +9,7 @@ using UnityEngine;
 namespace TinaX.UIKit.UGUI.Page.Group
 {
 #nullable enable
-    public class UGUIPageGroup : UIPageGroup
+    public class UGUIPageGroup : UIPageGroup, IUGUIGroup
     {
         //------------构造函数们-----------------------------------------------------------------------------------------
         public UGUIPageGroup() : base()

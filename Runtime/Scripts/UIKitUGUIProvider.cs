@@ -27,7 +27,7 @@ namespace TinaX.UIKit.UGUI
 
         public void ConfigureServices(IServiceContainer services) //注册服务
         {
-            services.Singleton<IUIKitUGUI, UIKitUGUIService>().SetAlias<IUIKitUGUIInternalService>();
+            services.Singleton<IUGUIKit, UGUIKitService>().SetAlias<IUGUIKitInternalService>();
         }
 
         public void ConfigureBehaviours(IBehaviourManager behaviour, IServiceContainer services)
@@ -45,7 +45,7 @@ namespace TinaX.UIKit.UGUI
 
         public async UniTask StartAsync(IServiceContainer services, CancellationToken cancellationToken = default) //启动服务
         {
-            var uGuiUIKit = services.Get<IUIKitUGUIInternalService>();
+            var uGuiUIKit = services.Get<IUGUIKitInternalService>();
             await uGuiUIKit.StartAsync(cancellationToken);
         }
 

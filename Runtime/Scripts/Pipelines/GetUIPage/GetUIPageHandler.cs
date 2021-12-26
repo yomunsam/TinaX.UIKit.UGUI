@@ -17,7 +17,7 @@ namespace TinaX.UIKit.UGUI.Pipelines.GetUIPage
 
         public string HandlerName => UIKitUGUIConsts.GetUIPagePipelineHandlerName;
 
-        private IUIKitUGUI? m_UIKit_UGUI_Service;
+        private IUGUIKit? m_UIKit_UGUI_Service;
 
         
 
@@ -27,13 +27,13 @@ namespace TinaX.UIKit.UGUI.Pipelines.GetUIPage
             Debug.Log("UIKit uGUI - Get Page: " + payload.GetUIPageArgs.PageUri);
 #endif
             if (m_UIKit_UGUI_Service == null)
-                m_UIKit_UGUI_Service = context.Services.Get<IUIKitUGUI>();
+                m_UIKit_UGUI_Service = context.Services.Get<IUGUIKit>();
 
             if (!PageUriHelper.IsMatch(payload.GetUIPageArgs.PageUri))
                 return;
             var getUGUIPageArgs = new GetUGUIPageArgs(payload.GetUIPageArgs.PageUri)
             {
-                PageController = payload.GetUIPageArgs.PageController
+                PageController = payload.GetUIPageArgs.PageController as UGUIPageController
             };
             getUGUIPageArgs.ControllerReflectionProvider ??= payload.DefaultControllerReflectionProvider;
             var page = await m_UIKit_UGUI_Service.GetUIPageAsync(getUGUIPageArgs);

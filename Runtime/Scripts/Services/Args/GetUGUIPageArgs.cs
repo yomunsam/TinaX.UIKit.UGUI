@@ -12,7 +12,7 @@ namespace TinaX.UIKit.UGUI
         }
         public string PageUri { get; set; }
 
-        public PageControllerBase? PageController { get; set; }
+        public UGUIPageController? PageController { get; set; }
 
         public IWrapperReflectionProvider? XBehaviourWrapperReflectionProvider { get; set; }
 

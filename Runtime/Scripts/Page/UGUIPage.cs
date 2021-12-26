@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Threading;
+﻿using System.Threading;
 using Cysharp.Threading.Tasks;
 using TinaX.UIKit.Page;
 using TinaX.UIKit.Page.Group;
@@ -7,7 +6,6 @@ using TinaX.UIKit.Page.View;
 using TinaX.UIKit.UGUI.Canvas;
 using TinaX.UIKit.UGUI.Page.Group;
 using TinaX.UIKit.UGUI.Page.View;
-using TinaX.UIKit.UGUI.Services;
 using TinaX.XComponent.Warpper.ReflectionProvider;
 using UnityEngine;
 
@@ -15,7 +13,7 @@ namespace TinaX.UIKit.UGUI.Page
 {
 #nullable enable
 
-    public class UGUIPage : UIPageBase
+    public class UGUIPage : UIPageBase, IUGUIPage
     {
         //------------构造函数字段--------------------------------------------------------------------------------------------------------------
 
@@ -58,11 +56,11 @@ namespace TinaX.UIKit.UGUI.Page
 
         public Transform? Transform => m_Transform;
 
-        public UGUIPageController? UGUIController => m_UGuiPageController;
+        public new UGUIPageController? Controller => m_UGuiPageController;
 
         public IWrapperReflectionProvider? XBehaviourWrapperReflectionProvider => m_XBehaviourWrapperReflectionProvider;
 
-        public UGUIPageGroup? ParentUGUI => m_ParentUGUI;
+        public new UGUIPageGroup? Parent => m_ParentUGUI;
 
         public UIKitUGUICanvas? UGUICanvas => m_ParentUGUI?.UGUICanvas;
 
@@ -84,7 +82,7 @@ namespace TinaX.UIKit.UGUI.Page
         {
             if(m_Content == null || m_uGuiViewProvider == null)
             {
-                m_uGuiPageView = await m_uGuiViewProvider!.GetPageViewGenericAsync(this, cancellationToken);
+                m_uGuiPageView = await m_uGuiViewProvider!.GetPageViewAsync(this, cancellationToken);
                 m_Content = m_uGuiPageView;
             }
         }
@@ -131,11 +129,15 @@ namespace TinaX.UIKit.UGUI.Page
 
         public override void ClosePage(params object?[]? closeMessageArgs)
         {
+            if (m_Destroyed)
+                return;
             //计算延迟，如UI关闭动画，需要等UI动画结束之后再处理遮罩等等
             //Todo ...
 
             //首先把自己从Group中移除
             m_Parent?.Remove(this);
+
+            //发送个事件
 
             //执行销毁
             this.DestroyPage();
@@ -144,7 +146,29 @@ namespace TinaX.UIKit.UGUI.Page
         public override void DestroyPage()
         {
             //throw new System.NotImplementedException();
+            //销毁View
         }
+
+
+
+        #region UI消息
+
+        public override bool SendUIDisplayMessage(object?[]? args)
+        {
+            if (base.SendUIDisplayMessage(args))
+                return true;
+            //如果基类方法里没成功的话，我们自己进行更多尝试
+            if(m_uGuiPageView != null)
+            {
+                return m_uGuiPageView.SendUIDisplayMessage(args);
+            }
+
+            return false;
+        }
+
+        #endregion
+
+
     }
 
 

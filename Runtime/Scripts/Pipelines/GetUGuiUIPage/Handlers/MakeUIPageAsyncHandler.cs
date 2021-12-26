@@ -19,14 +19,17 @@ namespace TinaX.UIKit.UGUI.Pipelines.GetUGuiUIPage.Handlers
             {
                 throw new XException("PageController must be \"UGUIPageController\"");
             }
-            var ugui_controller = payload.Args.PageController as UGUIPageController;
+            var ugui_controller = payload.Args.PageController;
             payload.UIPage = new Page.UGUIPage(payload.Args.PageUri, payload.ViewProvider!, ugui_controller, payload.Args.XBehaviourWrapperReflectionProvider);
             payload.UIPage.ControllerReflectionProvider = payload.Args.ControllerReflectionProvider ?? context.UIKit.DefaultControllerReflectionProvider;
 
             if(ugui_controller != null)
             {
+                //依赖注入
+                context.Services.Inject(ugui_controller);
+
                 //Controller导航器
-                var navigator = new UGUIPageNavigator(payload.UIPage, context.UIKit, context.UIKitUGUI);
+                var navigator = new UGUIPageNavigator(payload.UIPage, context.UIKit, context.UIKitUGUI, context.Services.XCore);
                 ugui_controller.Navigation = navigator;
             }
 

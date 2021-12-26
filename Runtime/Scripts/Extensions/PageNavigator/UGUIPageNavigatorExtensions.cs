@@ -7,7 +7,13 @@ namespace TinaX.UIKit
 {
     public static class UGUIPageNavigatorExtensions
     {
-        public static PageNavigatorOpenUGUIBuilder CreateOpenUI(this IPageNavigator<UGUIPage, OpenUGUIArgs> navigator, string pageUri)
-            => new PageNavigatorOpenUGUIBuilder(navigator, pageUri);
+        /// <summary>
+        /// 创建一个打开UI的构建器
+        /// </summary>
+        /// <param name="navigator"></param>
+        /// <param name="pageUri"></param>
+        /// <returns></returns>
+        public static UGUIPageNavigatorOpenUIBuilder CreateOpenUI(this IPageNavigator<IUGUIPage, OpenUGUIArgs> navigator, string pageUri)
+            => new UGUIPageNavigatorOpenUIBuilder(navigator, pageUri);
     }
 }

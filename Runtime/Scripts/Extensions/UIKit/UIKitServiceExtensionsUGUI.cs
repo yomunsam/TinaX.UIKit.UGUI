@@ -1,6 +1,5 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
-using TinaX.Exceptions;
 using TinaX.UIKit.UGUI;
 using TinaX.UIKit.UGUI.Helper;
 using TinaX.UIKit.UGUI.Page;
@@ -23,12 +22,10 @@ namespace TinaX.UIKit
         public static UniTask<UGUIPage> OpenUGUIAsync(this IUIKit uikit, string pageUri, CancellationToken cancellationToken = default)
             => uikit.OpenUGUIAsync(new OpenUGUIArgs(PageUriHelper.AddSchemeIfNot(pageUri)), cancellationToken);
 
-        public static async UniTask<UGUIPage> OpenUGUIAsync(this IUIKit uikit, OpenUGUIArgs args, CancellationToken cancellationToken = default)
+        public static UniTask<UGUIPage> OpenUGUIAsync(this IUIKit uikit, OpenUGUIArgs args, CancellationToken cancellationToken = default)
         {
             var uguikit = uikit.GetUIKitUGUI();
-            var page = await uguikit.GetUIPageAsync(args, cancellationToken);
-            uguikit.PushScreenUI(page, args.PushToGroupArgs?.DisplayMessageArgs);
-            return page;
+            return UIKitUGUIServiceExtensions.OpenUIAsync(uguikit, args, cancellationToken);
         }
 
         /// <summary>
@@ -36,8 +33,8 @@ namespace TinaX.UIKit
         /// </summary>
         /// <param name="uikit"></param>
         /// <returns></returns>
-        public static IUIKitUGUI GetUIKitUGUI(this IUIKit uikit)
-            => uikit.Services.Get<IUIKitUGUI>();
+        public static IUGUIKit GetUIKitUGUI(this IUIKit uikit)
+            => uikit.Services.Get<IUGUIKit>();
 
     }
 #nullable restore

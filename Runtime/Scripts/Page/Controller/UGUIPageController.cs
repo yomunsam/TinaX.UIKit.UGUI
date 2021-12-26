@@ -25,7 +25,7 @@ namespace TinaX.UIKit.UGUI
             }
         }
 
-        public new IPageNavigator<UGUIPage, OpenUGUIArgs>? Navigation { get; set; }
+        public new IPageNavigator<IUGUIPage, OpenUGUIArgs>? Navigation { get; set; }
 
     }
 #nullable restore

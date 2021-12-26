@@ -24,6 +24,8 @@ namespace TinaX.UIKit.UGUI.Page.Group
         /// 显示UI消息中附带的参数
         /// </summary>
         public object?[]? DisplayMessageArgs { get; set; } = null;
+
+        
     }
 #nullable restore
 }

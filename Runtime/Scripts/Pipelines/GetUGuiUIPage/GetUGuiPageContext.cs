@@ -11,7 +11,7 @@ namespace TinaX.UIKit.UGUI.Pipelines.GetUGuiUIPage
     /// </summary>
     public class GetUGuiPageContext
     {
-        public GetUGuiPageContext(IServiceContainer services, IAssetService assetService, IUIKit uikit, IUIKitUGUI uikitUGUI)
+        public GetUGuiPageContext(IServiceContainer services, IAssetService assetService, IUIKit uikit, IUGUIKit uikitUGUI)
         {
             this.Services = services;
             this.AssetService = assetService;
@@ -35,7 +35,7 @@ namespace TinaX.UIKit.UGUI.Pipelines.GetUGuiUIPage
         public IAssetService AssetService { get; set; }
 
         public IUIKit UIKit { get; set; }
-        public IUIKitUGUI UIKitUGUI { get; set; }
+        public IUGUIKit UIKitUGUI { get; set; }
 
     }
 #nullable restore

@@ -68,7 +68,7 @@ namespace TinaXEditor.UIKit.UGUI.ProjectSetting
                         EditorGUILayout.PropertyField(SPCreateUICameraAutomatically, L.CreateUICameraAutomatically);
                         if(SPCreateUICameraAutomatically.boolValue)
                         {
-                            EditorGUILayout.PropertyField(_configAssetSerializedObject.FindProperty("UICameraConfigAsset"), L.UICameraConfigAsset);
+                            EditorGUILayout.PropertyField(_configAssetSerializedObject.FindProperty("UICameraConfigAssets"), L.UICameraConfigAssets);
                         }
 
                         //自动创建UI EventSystem
@@ -152,10 +152,8 @@ namespace TinaXEditor.UIKit.UGUI.ProjectSetting
 
         class Localizer
         {
-            //bool IsHans = EditorLocalizationUtil.IsHans();
-            bool IsHans = true;
-            //bool IsJp = EditorLocalizationUtil.IsJapanese();
-            bool IsJp = false;
+            bool IsHans = EditorLocalizationUtil.IsHans();
+            bool IsJp = EditorLocalizationUtil.IsJapanese();
 
             public string NoConfig
             {
@@ -220,7 +218,7 @@ namespace TinaXEditor.UIKit.UGUI.ProjectSetting
             }
 
             public GUIContent _UICameraConfigAsset;
-            public GUIContent UICameraConfigAsset
+            public GUIContent UICameraConfigAssets
             {
                 get
                 {

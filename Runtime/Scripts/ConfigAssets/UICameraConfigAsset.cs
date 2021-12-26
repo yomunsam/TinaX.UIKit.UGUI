@@ -22,5 +22,6 @@ namespace TinaX.UIKit.UGUI.ConfigAssets
         public bool useOcclusionCulling = true;
         public bool allowHDR = false;
         public bool allowMSAA = false;
+
     }
 }

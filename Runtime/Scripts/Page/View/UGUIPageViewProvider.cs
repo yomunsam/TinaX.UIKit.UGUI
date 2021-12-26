@@ -26,23 +26,23 @@ namespace TinaX.UIKit.UGUI.Page.View
         public bool SupportAsynchronous => true; //支持异步方法
 
         public PageView GetPageView(UIPageBase page)
-            => GetPageViewGeneric((UGUIPage)page);
+            => GetPageView((UGUIPage)page);
 
 
         public async UniTask<PageView> GetPageViewAsync(UIPageBase page, CancellationToken cancellationToken = default)
         {
-            var view = await GetPageViewGenericAsync((UGUIPage)page, cancellationToken);
+            var view = await GetPageViewAsync((UGUIPage)page, cancellationToken);
             return view;
         }
 
 
 
-        public UGUIPageView GetPageViewGeneric(UGUIPage page)
+        public UGUIPageView GetPageView(UGUIPage page)
         {
             throw new NotImplementedException();
         }
 
-        public async UniTask<UGUIPageView> GetPageViewGenericAsync(UGUIPage page, CancellationToken cancellationToken = default)
+        public async UniTask<UGUIPageView> GetPageViewAsync(UGUIPage page, CancellationToken cancellationToken = default)
         {
             var ugui_prefab = await m_AssetService.LoadAsync<GameObject>(m_ViewUri, cancellationToken);
             var pageView = new UGUIPageView(m_ViewUri, ugui_prefab, page);

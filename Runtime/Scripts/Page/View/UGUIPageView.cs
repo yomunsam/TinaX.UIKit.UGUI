@@ -2,6 +2,7 @@
 using TinaX.XComponent.Warpper;
 using UnityEngine;
 using TinaX.XComponent;
+using TinaX.UIKit.UIMessage;
 
 namespace TinaX.UIKit.UGUI.Page.View
 {
@@ -65,6 +66,41 @@ namespace TinaX.UIKit.UGUI.Page.View
             if (m_UnityCanvas != null)
                 m_UnityCanvas.sortingOrder = order;
         }
+
+
+        #region UI Messages
+
+        /// <summary>
+        /// 当对UIController发送消息失败时，我们这里能不能进行更多的尝试呢？
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public virtual bool SendUIDisplayMessage(object?[]? args)
+        {
+            //试试对挂在根组件上的任意继承自 MonoBehaviour 的组件发起调用。
+            if (m_uGuiGameObject != null)
+            {
+                var components = m_uGuiGameObject.GetComponents<MonoBehaviour>();
+                if(components != null && components.Length > 0)
+                {
+                    for(int i = 0; i < components.Length; i++)
+                    {
+                        if (components[i] is UGUIPageViewComponent)
+                            continue;
+
+                        if(components[i] is IUIDisplayMessage displayMsg)
+                        {
+                            displayMsg.OnDisplayed(args);
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+
+        #endregion
     }
 #nullable restore
 }

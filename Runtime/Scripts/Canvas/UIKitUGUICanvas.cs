@@ -1,5 +1,4 @@
 ﻿using TinaX.UIKit.Canvas;
-using TinaX.UIKit.Page.Group;
 using TinaX.UIKit.UGUI.Page;
 using TinaX.UIKit.UGUI.Page.Group;
 using UnityEngine;
@@ -58,7 +57,7 @@ namespace TinaX.UIKit.UGUI.Canvas
         /// <param name="maskColor"></param>
         public virtual void UseBackgroundMask(UGUIPage page, bool closeByMask, Color? maskColor)
         {
-            var group = page.ParentUGUI;
+            var group = page.Parent;
             //我们还是看一下需不需要处理
             var lastChildGroup = m_RootGroupUGUI!.GetLastChildUGUIGroup();
             if (lastChildGroup!.UseMask && group != lastChildGroup)

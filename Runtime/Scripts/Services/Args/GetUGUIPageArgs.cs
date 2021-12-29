@@ -23,6 +23,16 @@ namespace TinaX.UIKit.UGUI
         /// </summary>
         public bool LoadPrefab { get; set; } = true;
 
+        /// <summary>
+        /// 显示 简单动画名称
+        /// </summary>
+        public string? DisplayedSimpleAnimationName { get; set; }
+
+        /// <summary>
+        /// 关闭 简单动画名称
+        /// </summary>
+        public string? ClosedSimpleAnimationName { get; set; }
+
 
         public GetUIPageArgs GetGetUIPageArgs()
         {

@@ -12,6 +12,7 @@ namespace TinaX.UIKit.UGUI
 
         public PushUGUIPageArgs? PushToGroupArgs { get; set; }
 
+
         /// <summary>
         /// UI显示屏幕序号（从导航器打开UI时，此选项不可用，因为导航器强制只能加载到当前栈或子栈）（也所以这个设置没有放在 PushUGUIPageArgs 里）
         /// </summary>

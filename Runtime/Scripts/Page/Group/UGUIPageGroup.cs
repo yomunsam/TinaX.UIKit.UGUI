@@ -143,9 +143,7 @@ namespace TinaX.UIKit.UGUI.Page.Group
                 }
             }
 
-
             base.Remove(child); //然后这里会执行UI栈的实际移除
-            
         }
 
         //------------内部方法们-----------------------------------------------------------------------------------------------------------
@@ -294,6 +292,10 @@ namespace TinaX.UIKit.UGUI.Page.Group
                     {
                         var last_page = maskGroup.GetLastUsedBackgroundMaskPage();
                         m_UGUICanvas?.UseBackgroundMask(last_page!, last_page!.CloseByBackgroundMask, last_page!.BackgroundMaskColor);
+                    }
+                    else
+                    {
+                        throw new Exception("Unexpected situation!"); //向开发者表示愤慨
                     }
                 }
             }

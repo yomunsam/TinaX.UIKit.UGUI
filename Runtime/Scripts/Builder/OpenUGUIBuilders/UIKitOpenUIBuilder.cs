@@ -1,58 +1,38 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
-using TinaX.UIKit.Page.Navigator;
+using TinaX.UIKit.UGUI.MultipleDisplay;
 using TinaX.UIKit.UGUI.Page;
 using TinaX.XComponent.Warpper.ReflectionProvider;
 using UnityEngine;
 
+#nullable enable
+
 namespace TinaX.UIKit.UGUI.Builder.OpenUGUIBuilders
 {
-#nullable enable
-    /// <summary>
-    /// 通过页面导航器打开UGUI的构建器
-    /// </summary>
-    public class UGUIPageNavigatorOpenUIBuilder
+    public class UIKitOpenUIBuilder
     {
-        private readonly IPageNavigator<IUGUIPage, OpenUGUIArgs> m_Navigator;
+        private readonly IUIKit m_UIKit;
         private readonly OpenUGUIArgs m_OpenUGuiArgs;
 
-        public UGUIPageNavigatorOpenUIBuilder(IPageNavigator<IUGUIPage, OpenUGUIArgs> navigator, string pageUri)
+        public UIKitOpenUIBuilder(IUIKit uiKit, string pageUri)
         {
-            this.m_Navigator = navigator;
+            this.m_UIKit = uiKit;
             m_OpenUGuiArgs = new OpenUGUIArgs(pageUri);
         }
 
-        public UGUIPageNavigatorOpenUIBuilder SetPageUri(string pageUri)
+        public UIKitOpenUIBuilder SetPageUri(string pageUri)
         {
             this.m_OpenUGuiArgs.PageUri = pageUri;
             return this;
         }
 
-        public UGUIPageNavigatorOpenUIBuilder SetController(UGUIPageController controller)
+        public UIKitOpenUIBuilder SetController(UGUIPageController controller)
         {
             this.m_OpenUGuiArgs.PageController = controller;
             return this;
         }
 
-        public UGUIPageNavigatorOpenUIBuilder SetController<TController>() where TController : UGUIPageController
-        {
-            this.m_OpenUGuiArgs.PageController = m_Navigator.XCore.Services.CreateInstance<TController>();
-            return this;
-        }
-
-        public UGUIPageNavigatorOpenUIBuilder SetDisplayedAnimation(string simpleAnimationName)
-        {
-            this.m_OpenUGuiArgs.DisplayedSimpleAnimationName = simpleAnimationName;
-            return this;
-        }
-
-        public UGUIPageNavigatorOpenUIBuilder SetClosedAnimation(string simpleAnimationName)
-        {
-            this.m_OpenUGuiArgs.ClosedSimpleAnimationName = simpleAnimationName;
-            return this;
-        }
-
-        public UGUIPageNavigatorOpenUIBuilder SetDisplayMessageArgs(params object?[] args)
+        public UIKitOpenUIBuilder SetDisplayMessageArgs(params object?[] args)
         {
             if (m_OpenUGuiArgs.PushToGroupArgs == null)
                 m_OpenUGuiArgs.PushToGroupArgs = new Page.Group.PushUGUIPageArgs();
@@ -65,7 +45,7 @@ namespace TinaX.UIKit.UGUI.Builder.OpenUGUIBuilders
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public UGUIPageNavigatorOpenUIBuilder SetXBehaviourWrapperReflectionProvider(IWrapperReflectionProvider provider)
+        public UIKitOpenUIBuilder SetXBehaviourWrapperReflectionProvider(IWrapperReflectionProvider provider)
         {
             this.m_OpenUGuiArgs.XBehaviourWrapperReflectionProvider = provider;
             return this;
@@ -76,7 +56,7 @@ namespace TinaX.UIKit.UGUI.Builder.OpenUGUIBuilders
         /// </summary>
         /// <param name="useMask"></param>
         /// <returns></returns>
-        public UGUIPageNavigatorOpenUIBuilder SetUseBackgroundMask(bool useMask = true)
+        public UIKitOpenUIBuilder SetUseBackgroundMask(bool useMask = true)
         {
             if (m_OpenUGuiArgs.PushToGroupArgs == null)
                 m_OpenUGuiArgs.PushToGroupArgs = new Page.Group.PushUGUIPageArgs();
@@ -91,7 +71,7 @@ namespace TinaX.UIKit.UGUI.Builder.OpenUGUIBuilders
         /// <param name="closeByMask">点击遮罩可关闭UI（点击空白处关闭）</param>
         /// <param name="maskColor">指定背景遮罩颜色</param>
         /// <returns></returns>
-        public UGUIPageNavigatorOpenUIBuilder SetUseBackgroundMask(bool useMask, bool closeByMask, Color? maskColor = null)
+        public UIKitOpenUIBuilder SetUseBackgroundMask(bool useMask, bool closeByMask, Color? maskColor = null)
         {
             if (m_OpenUGuiArgs.PushToGroupArgs == null)
                 m_OpenUGuiArgs.PushToGroupArgs = new Page.Group.PushUGUIPageArgs();
@@ -106,7 +86,7 @@ namespace TinaX.UIKit.UGUI.Builder.OpenUGUIBuilders
         /// </summary>
         /// <param name="closeByMask"></param>
         /// <returns></returns>
-        public UGUIPageNavigatorOpenUIBuilder SetCloseByBackgroundMask(bool closeByMask = true)
+        public UIKitOpenUIBuilder SetCloseByBackgroundMask(bool closeByMask = true)
         {
             if (m_OpenUGuiArgs.PushToGroupArgs == null)
                 m_OpenUGuiArgs.PushToGroupArgs = new Page.Group.PushUGUIPageArgs();
@@ -119,7 +99,7 @@ namespace TinaX.UIKit.UGUI.Builder.OpenUGUIBuilders
         /// </summary>
         /// <param name="color"></param>
         /// <returns></returns>
-        public UGUIPageNavigatorOpenUIBuilder SetBackgroundMaskColor(Color color)
+        public UIKitOpenUIBuilder SetBackgroundMaskColor(Color color)
         {
             if (m_OpenUGuiArgs.PushToGroupArgs == null)
                 m_OpenUGuiArgs.PushToGroupArgs = new Page.Group.PushUGUIPageArgs();
@@ -127,12 +107,30 @@ namespace TinaX.UIKit.UGUI.Builder.OpenUGUIBuilders
             return this;
         }
 
+        public UIKitOpenUIBuilder SetDisplayedAnimation(string simpleAnimationName)
+        {
+            m_OpenUGuiArgs.DisplayedSimpleAnimationName = simpleAnimationName;
+            return this;
+        }
 
+        public UIKitOpenUIBuilder SetClosedAnimation(string simpleAnimationName)
+        {
+            m_OpenUGuiArgs.DisplayedSimpleAnimationName = simpleAnimationName;
+            return this;
+        }
+
+        public UIKitOpenUIBuilder SetDisplay(DisplayIndex displayIndex)
+        {
+            m_OpenUGuiArgs.DisplayIndex = displayIndex;
+            return this;
+        }
+
+        
 
         public UniTask<IUGUIPage> OpenUIAsync(CancellationToken cancellationToken = default)
         {
-            return m_Navigator.OpenUIAsync(m_OpenUGuiArgs, cancellationToken);
+            return UIKitServiceExtensionsUGUI.OpenUGUIAsync(m_UIKit, m_OpenUGuiArgs, cancellationToken);
         }
+
     }
-#nullable restore
 }

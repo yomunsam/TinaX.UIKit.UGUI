@@ -2,7 +2,9 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using TinaX.Exceptions;
+using TinaX.UIKit.UGUI.Page;
 using TinaX.UIKit.UGUI.Page.Navigator;
+using UnityEngine;
 
 namespace TinaX.UIKit.UGUI.Pipelines.GetUGuiUIPage.Handlers
 {
@@ -32,6 +34,7 @@ namespace TinaX.UIKit.UGUI.Pipelines.GetUGuiUIPage.Handlers
                 var navigator = new UGUIPageNavigator(payload.UIPage, context.UIKit, context.UIKitUGUI, context.Services.XCore);
                 ugui_controller.Navigation = navigator;
             }
+
 
             return UniTask.CompletedTask;
         }

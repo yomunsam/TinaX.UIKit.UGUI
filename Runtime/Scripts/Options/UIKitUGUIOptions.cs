@@ -1,4 +1,7 @@
-﻿using TinaX.Systems.Pipeline;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using TinaX.Systems.Pipeline;
+using TinaX.UIKit.UGUI.Animation;
 using TinaX.UIKit.UGUI.Consts;
 using TinaX.UIKit.UGUI.Pipelines.GetUGuiUIPage;
 
@@ -10,6 +13,7 @@ namespace TinaX.UIKit.UGUI.Options
 
         public readonly XPipeline<IGetUGuiPageAsyncHandler> GetUGUIPageAsyncPipeline = GetUGuiPagePipelineDefault.CreateAsyncDefault();
 
+
         /// <summary>
         /// 启用多个Display（如可用）
         /// </summary>
@@ -19,5 +23,11 @@ namespace TinaX.UIKit.UGUI.Options
         /// 在编辑器中强制认为有多个显示器
         /// </summary>
         public int? ForceDisplayNumInEditor { get; set; }
+
+
+        //-----------------------------------------------------------------------------------------------------
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public readonly Dictionary<string, PlaySimpleAnimation> PlaySimpleAnimationGateways = new Dictionary<string, PlaySimpleAnimation>();
     }
 }

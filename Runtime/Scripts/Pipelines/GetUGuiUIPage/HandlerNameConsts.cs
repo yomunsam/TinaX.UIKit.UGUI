@@ -22,5 +22,7 @@
         /// </summary>
         public const string LoadViewAsset = @"LoadViewAsset";
 
+        public const string AddSimpleAnimation = @"AddSimpleAnimation";
+
     }
 }

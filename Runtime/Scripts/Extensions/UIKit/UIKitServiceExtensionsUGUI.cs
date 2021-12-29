@@ -3,7 +3,7 @@ using Cysharp.Threading.Tasks;
 using TinaX.UIKit.UGUI;
 using TinaX.UIKit.UGUI.Helper;
 using TinaX.UIKit.UGUI.Page;
-using TinaX.UIKit.UGUI.Services;
+using UIKitOpenUIBuilder = TinaX.UIKit.UGUI.Builder.OpenUGUIBuilders.UIKitOpenUIBuilder;
 
 namespace TinaX.UIKit
 {
@@ -16,17 +16,20 @@ namespace TinaX.UIKit
         //private static string _Scheme = $"{UIKitUGUIConsts.SchemeName}://";
         //private static string _SchemeLower = _Scheme.ToLower();
 
-        public static UniTask<UGUIPage> OpenUGUIAsync(this IUIKit uikit, string pageUri, UGUIPageController controller, CancellationToken cancellationToken = default)
+        public static UniTask<IUGUIPage> OpenUGUIAsync(this IUIKit uikit, string pageUri, UGUIPageController controller, CancellationToken cancellationToken = default)
             => uikit.OpenUGUIAsync(new OpenUGUIArgs(PageUriHelper.AddSchemeIfNot(pageUri)) { PageController = controller }, cancellationToken);
 
-        public static UniTask<UGUIPage> OpenUGUIAsync(this IUIKit uikit, string pageUri, CancellationToken cancellationToken = default)
+        public static UniTask<IUGUIPage> OpenUGUIAsync(this IUIKit uikit, string pageUri, CancellationToken cancellationToken = default)
             => uikit.OpenUGUIAsync(new OpenUGUIArgs(PageUriHelper.AddSchemeIfNot(pageUri)), cancellationToken);
 
-        public static UniTask<UGUIPage> OpenUGUIAsync(this IUIKit uikit, OpenUGUIArgs args, CancellationToken cancellationToken = default)
+        public static UniTask<IUGUIPage> OpenUGUIAsync(this IUIKit uikit, OpenUGUIArgs args, CancellationToken cancellationToken = default)
         {
             var uguikit = uikit.GetUIKitUGUI();
             return UIKitUGUIServiceExtensions.OpenUIAsync(uguikit, args, cancellationToken);
         }
+
+        public static UIKitOpenUIBuilder CreateOpenUGUI(this IUIKit uikit, string pageUri)
+            => new UIKitOpenUIBuilder(uikit, pageUri);
 
         /// <summary>
         /// Get UIKit(uGUI)

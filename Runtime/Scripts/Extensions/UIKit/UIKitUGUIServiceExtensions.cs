@@ -17,7 +17,7 @@ namespace TinaX.UIKit
         /// <param name="args"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async UniTask<UGUIPage> OpenUIAsync(this IUGUIKit uguikit, OpenUGUIArgs args, CancellationToken cancellationToken = default) //这里应该是IUIKitUGUI接口打开UI的总方法
+        public static async UniTask<IUGUIPage> OpenUIAsync(this IUGUIKit uguikit, OpenUGUIArgs args, CancellationToken cancellationToken = default) //这里应该是IUIKitUGUI接口打开UI的总方法
         {
             var page = await uguikit.GetUIPageAsync(args, cancellationToken); //加载UI Page
             uguikit.PushScreenUI(page, args.DisplayIndex, args.PushToGroupArgs); //推到默认的屏幕空间

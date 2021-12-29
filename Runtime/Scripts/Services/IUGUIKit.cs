@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
 using TinaX.UIKit.UGUI;
+using TinaX.UIKit.UGUI.Animation;
 using TinaX.UIKit.UGUI.MultipleDisplay;
 using TinaX.UIKit.UGUI.Page;
 using TinaX.UIKit.UGUI.Page.Group;
@@ -10,6 +11,8 @@ namespace TinaX.UIKit
 #nullable enable
     public interface IUGUIKit
     {
+        SimpleAnimationManager SimpleAnimationManager { get; }
+
         UniTask<UGUIPage> GetUIPageAsync(string pageUri, bool loadViewPrefab = true, CancellationToken cancellationToken = default);
         UniTask<UGUIPage> GetUIPageAsync(GetUGUIPageArgs args, CancellationToken cancellationToken = default);
 

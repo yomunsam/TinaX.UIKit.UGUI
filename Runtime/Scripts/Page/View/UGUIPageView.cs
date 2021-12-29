@@ -60,28 +60,7 @@ namespace TinaX.UIKit.UGUI.Page.View
             m_Page.SendUIDisplayMessage(args);
         }
 
-        public override void Destroy(System.TimeSpan? delayTime = null)
-        {
-            if (m_Destroyed)
-                return;
-
-            if(m_uGuiGameObject != null)
-            {
-                if (delayTime != null)
-                {
-                    Observable.Timer(delayTime.Value)
-                        .Subscribe(_ => { DestroyNow(); })
-                        .AddTo(m_uGuiGameObject);
-                }
-                else
-                {
-                    DestroyNow();
-                }
-            }
-            
-        }
-
-        private void DestroyNow()
+        public override void Destroy()
         {
             if (m_Destroyed)
                 return;
@@ -93,7 +72,7 @@ namespace TinaX.UIKit.UGUI.Page.View
             m_uGuiGameObject = null; //因为GameObject重载了 !=、==这些符号，所以你以为这儿是null的其实它可能不是null，所以手动把它设一遍null以防内存泄露（奇妙的设计）
 
             //释放Prefab
-            if(m_uGuiPrefab != null)
+            if (m_uGuiPrefab != null)
             {
                 m_AssetService.Release(m_uGuiPrefab);
             }
@@ -101,6 +80,7 @@ namespace TinaX.UIKit.UGUI.Page.View
             m_Destroyed = true;
         }
 
+        
         /// <summary>
         /// 设置序号
         /// </summary>

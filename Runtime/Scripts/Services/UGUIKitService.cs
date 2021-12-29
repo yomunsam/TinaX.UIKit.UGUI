@@ -10,6 +10,7 @@ using TinaX.Options;
 using TinaX.Services;
 using TinaX.Services.ConfigAssets;
 using TinaX.Systems.Pipeline;
+using TinaX.UIKit.UGUI.Animation;
 using TinaX.UIKit.UGUI.ConfigAssets;
 using TinaX.UIKit.UGUI.Consts;
 using TinaX.UIKit.UGUI.MultipleDisplay;
@@ -35,6 +36,7 @@ namespace TinaX.UIKit.UGUI.Services
         private readonly UICameraManager m_UICameraManager;
 
         private readonly XPipeline<IGetUGuiPageAsyncHandler> m_GetUGUIPageAsyncPipeline;
+        private readonly SimpleAnimationManager m_SimpleAnimationManager;
 
         //------------构造方法---------------------------------------------------------------------------------------
 
@@ -52,6 +54,7 @@ namespace TinaX.UIKit.UGUI.Services
 
             m_GetUGUIPageAsyncPipeline = m_Options.GetUGUIPageAsyncPipeline;
             m_UICameraManager = new UICameraManager();
+            m_SimpleAnimationManager = new SimpleAnimationManager(m_Options.PlaySimpleAnimationGateways);
         }
 
         //------------内部字段---------------------------------------------------------------------------------------
@@ -61,6 +64,12 @@ namespace TinaX.UIKit.UGUI.Services
         private GameObject? m_UIKitUGUIRootGameObject;
         private UIRootManager? m_UIRootManager;
         private GameObject? m_UICameraRootGameObject;
+
+        //------------公开属性---------------------------------------------------------------------------------------------
+
+        public SimpleAnimationManager SimpleAnimationManager => m_SimpleAnimationManager;
+
+        //------------公开方法--------------------------------------------------------------------------------------------
 
         public async UniTask StartAsync(CancellationToken cancellationToken = default)
         {

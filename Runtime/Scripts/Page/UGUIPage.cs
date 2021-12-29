@@ -9,6 +9,7 @@ using TinaX.UIKit.UGUI.Page.BackgroundMask;
 using TinaX.UIKit.UGUI.Page.Group;
 using TinaX.UIKit.UGUI.Page.View;
 using TinaX.XComponent.Warpper.ReflectionProvider;
+using UniRx;
 using UnityEngine;
 
 namespace TinaX.UIKit.UGUI.Page
@@ -92,6 +93,9 @@ namespace TinaX.UIKit.UGUI.Page
         public override void DisplayView(object?[]? args)
         {
             m_uGuiPageView?.Display(args);
+
+            //调用Actions
+            InvokeOnDisplayedActions();
         }
 
         public override void HideView()
@@ -129,28 +133,56 @@ namespace TinaX.UIKit.UGUI.Page
         public void SetTransform(Transform transform) 
             => m_Transform = transform;
 
-        public override void ClosePage(params object?[]? closeMessageArgs)
+        public override void ClosePage(params object?[] closeMessageArgs)
         {
-            if (m_Closed)
+            if (m_Closed || m_Closing)
                 return;
-            //计算延迟，如UI关闭动画，需要等UI动画结束之后再处理遮罩等等
-            //Todo ...
+
+            m_Closing = true;
+
+            InvokeOnClosedActions();
+
+            //延迟，可能由于UI关闭动画等原因需要延迟执行真正的关闭操作
+            TimeSpan delayTime = this.CloseDelayTime;
+            if (delayTime != TimeSpan.Zero)
+            {
+                Observable.Timer(delayTime)
+                    .Subscribe(_ => { DoClosePage(closeMessageArgs); })
+                    .AddTo(this.m_Transform);
+            }
+            else
+            {
+                DoClosePage(closeMessageArgs);
+            }
+        }
+
+        private void DoClosePage(object?[]? closeMessageArgs)
+        {
+            //开始执行实际的关闭页面工作
 
             //首先把自己从Group中移除
             m_Parent?.Remove(this);
-
             //发送个事件
             SendUIClosedMessage(closeMessageArgs);
 
             //销毁View
-            if(m_uGuiPageView != null)
+            if (m_uGuiPageView != null)
             {
-                m_uGuiPageView.Destroy(null); //Todo: 销毁延迟
+                m_uGuiPageView.Destroy(); //Todo: 销毁延迟
             }
             m_uGuiPageView = null;
             m_Transform = null;
-        }
 
+            m_OnDisplayedActions.Clear();
+            m_OnClosedActions?.Clear();
+            m_OnHiddenActions?.Clear();
+            m_OnShowedActions?.Clear();
+            m_OnActiveActions?.Clear();
+
+            //关闭操作结束
+            m_Closing = false;
+            m_Closed = true;
+        }
 
 
 

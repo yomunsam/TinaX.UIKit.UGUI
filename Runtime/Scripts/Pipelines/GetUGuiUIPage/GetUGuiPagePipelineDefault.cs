@@ -1,6 +1,6 @@
 ﻿using System;
 using TinaX.Systems.Pipeline;
-using TinaX.UIKit.Page.Group;
+using TinaX.UIKit.UGUI.GetUGuiUIPage.Handlers;
 using TinaX.UIKit.UGUI.Pipelines.GetUGuiUIPage.Handlers;
 
 namespace TinaX.UIKit.UGUI.Pipelines.GetUGuiUIPage
@@ -35,6 +35,9 @@ namespace TinaX.UIKit.UGUI.Pipelines.GetUGuiUIPage
 
             //加载View Prefab
             pipeline.AddLast(new LoadViewAssetAsyncHandler());
+
+            //添加简单动画（如果需要的话）
+            pipeline.AddLast(new AddSimpleAnimationsAsyncHandler());
         }
     }
 }

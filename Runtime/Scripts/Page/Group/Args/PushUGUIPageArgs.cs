@@ -25,7 +25,6 @@ namespace TinaX.UIKit.UGUI.Page.Group
         /// </summary>
         public object?[]? DisplayMessageArgs { get; set; } = null;
 
-        
     }
 #nullable restore
 }
